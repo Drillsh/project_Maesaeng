@@ -25,51 +25,47 @@
                <children>
                   <Pane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <ImageView id="image1" fitHeight="241.0" fitWidth="260.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../Pictures/Saved%20Pictures/KakaoTalk_20200421_213820662.jpg" />
-                           </image>
-                        </ImageView>
+                        <ImageView id="image1" fitHeight="241.0" fitWidth="260.0" pickOnBounds="true" />
                      </children>
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                        <ImageView id="image2" fitHeight="150.0" fitWidth="200.0" layoutX="-9.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="image2" fitHeight="244.0" fitWidth="266.0" layoutX="-9.0" pickOnBounds="true" />
                      </children>
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
                      <children>
-                        <ImageView id="image3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="image3" fitHeight="247.0" fitWidth="251.0" pickOnBounds="true" />
                      </children>
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <children>
-                        <ImageView id="image4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="image4" fitHeight="249.0" fitWidth="254.0" pickOnBounds="true" />
                      </children>
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <ImageView id="image5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="image5" fitHeight="250.0" fitWidth="255.0" pickOnBounds="true" />
                      </children>
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <children>
-                        <ImageView id="image6" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="image6" fitHeight="247.0" fitWidth="255.0" pickOnBounds="true" />
                      </children>
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
                      <children>
-                        <ImageView id="image7" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="image7" fitHeight="242.0" fitWidth="257.0" pickOnBounds="true" smooth="false" />
                      </children>
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <ImageView id="image8" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="image8" fitHeight="245.0" fitWidth="259.0" pickOnBounds="true" />
                      </children>
                   </Pane>
                   <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <children>
-                        <ImageView id="image9" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="image9" fitHeight="245.0" fitWidth="256.0" pickOnBounds="true" />
                      </children>
                   </Pane>
                </children>

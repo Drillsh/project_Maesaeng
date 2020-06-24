@@ -1,71 +1,51 @@
 package model;
 
 public class User {
-
-	private String userID;
-	private String uPassword;
-	private String uName;
-	private String uPhone;
-	private String uEmail;
-	
-	
-	public User(String userID, String uPassword, String uName, String uPhone, String uEmail) {
-		this.userID = userID;
-		this.uPassword = uPassword;
-		this.uName = uName;
-		this.uPhone = uPhone;
-		this.uEmail = uEmail;
-	}
-
-
-	public String getUserID() {
-		return userID;
-	}
-
-
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
-
-
-	public String getuPassword() {
-		return uPassword;
-	}
-
-
-	public void setuPassword(String uPassword) {
-		this.uPassword = uPassword;
-	}
-
-
-	public String getuName() {
-		return uName;
-	}
-
-
-	public void setuName(String uName) {
-		this.uName = uName;
-	}
+private String userid;
+private String name;
+private String password;
+private String phone;
+private String mail;
+public User(String userid,  String password,String name, String phone, String mail) {
+	super();
+	this.userid = userid;
+	this.name = name;
+	this.password = password;
+	this.phone = phone;
+	this.mail = mail;
+}
+public String getUserid() {
+	return userid;
+}
+public void setUserid(String userid) {
+	this.userid = userid;
+}
+public String getName() {
+	return name;
+}
+public void setName(String name) {
+	this.name = name;
+}
+public String getPassword() {
+	return password;
+}
+public void setPassword(String password) {
+	this.password = password;
+}
+public String getPhone() {
+	return phone;
+}
+public void setPhone(String phone) {
+	this.phone = phone;
+}
+public String getMail() {
+	return mail;
+}
+public void setMail(String mail) {
+	this.mail = mail;
+}
 
 
-	public String getuPhone() {
-		return uPhone;
-	}
 
 
-	public void setuPhone(String uPhone) {
-		this.uPhone = uPhone;
-	}
-
-
-	public String getuEmail() {
-		return uEmail;
-	}
-
-
-	public void setuEmail(String uEmail) {
-		this.uEmail = uEmail;
-	}
-	
-	
 }
