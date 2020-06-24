@@ -72,7 +72,7 @@ public class AlbumDAO {
 				return null;
 			}
 		} catch (Exception e) {
-
+			System.out.println("테스트입니다.");
 		} finally {
 			try {
 				if (pstmt != null)
