@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="47.0" layoutY="48.0" text="회원리스트" />
+      <TableView id="tlvList" layoutX="21.0" layoutY="88.0" prefHeight="724.0" prefWidth="1060.0" />
+      <Button id="btnAdd" layoutX="777.0" layoutY="843.0" mnemonicParsing="false" text="수정" />
+      <Button id="btnDelete" layoutX="884.0" layoutY="843.0" mnemonicParsing="false" text="삭제" />
+      <RadioButton id="rdnBlackList" layoutX="35.0" layoutY="843.0" mnemonicParsing="false" text="블랙리스트 추가" />
+   </children>
+</AnchorPane>

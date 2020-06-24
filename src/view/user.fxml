@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserController">
+   <children>
+      <Label layoutX="235.0" layoutY="70.0" text="홈" />
+      <Label layoutX="317.0" layoutY="70.0" text="앨범" />
+      <Label layoutX="402.0" layoutY="70.0" text="공지사항" />
+      <Label layoutX="979.0" layoutY="70.0" text="이름" />
+      <Label fx:id="lbLogout" layoutX="1088.0" layoutY="70.0" text="로그아웃" />
+      <Label layoutX="45.0" layoutY="24.0" prefHeight="74.0" prefWidth="78.0" text="로고" />
+      <Separator layoutX="33.0" layoutY="129.0" prefHeight="6.0" prefWidth="1115.0" />
+      <TabPane fx:id="tbpTab" layoutX="45.0" layoutY="186.0" prefHeight="593.0" prefWidth="1115.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="스터디룸">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="395.0" prefWidth="878.0">
+                     <children>
+                        <ImageView fx:id="imgPic" fitHeight="427.0" fitWidth="454.0" layoutX="45.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true" />
+                        <HBox layoutX="539.0" layoutY="73.0" prefHeight="200.0" prefWidth="500.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="250.0" spacing="20.0">
+                                 <children>
+                                    <ToggleButton fx:id="btnA" mnemonicParsing="false" prefWidth="130.0" text="A" />
+                                    <ToggleButton fx:id="btnB" mnemonicParsing="false" prefWidth="130.0" text="B" />
+                                    <ToggleButton fx:id="btnC" mnemonicParsing="false" prefWidth="130.0" text="C" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="250.0" spacing="20.0">
+                                 <children>
+                                    <ToggleButton fx:id="btnD" mnemonicParsing="false" prefWidth="130.0" text="D" />
+                                    <ToggleButton fx:id="btnE" mnemonicParsing="false" prefWidth="130.0" text="E" />
+                                    <ToggleButton fx:id="btnF" mnemonicParsing="false" prefWidth="130.0" text="F" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox layoutX="558.0" layoutY="303.0" prefHeight="200.0" prefWidth="500.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="250.0" spacing="20.0">
+                                 <children>
+                                    <Label text="인 원" />
+                                    <Label text="화이트 보드" />
+                                    <Label text="TV" />
+                                    <Label text="요 금" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="250.0" spacing="20.0">
+                                 <children>
+                                    <Label fx:id="lbPersonNum" text="ㅇㅇㅇ" />
+                                    <Label fx:id="lbIsWB" text="ㅇㅇㅇ" />
+                                    <Label fx:id="lbIsTV" text="ㅇㅇㅇ" />
+                                    <Label fx:id="lbCharge" text="ㅇㅇㅇㅇ" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Button fx:id="btnNext1" layoutX="1016.0" layoutY="501.0" mnemonicParsing="false" text="선택 완료" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab id="tabSchedule" text="일 정 ">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="598.0" layoutY="12.0" prefHeight="480.0" prefWidth="487.0" spacing="20.0">
+                           <children>
+                              <TableView fx:id="tlvRevList" prefHeight="234.0" prefWidth="487.0" />
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
+                                 <children>
+                                    <Label text="인원수" />
+                                    <Slider fx:id="sdrPersonNum" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" prefHeight="42.0" prefWidth="382.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+                                 <children>
+                                    <Label text="시작 시간" />
+                                    <ComboBox fx:id="cmbStart" prefHeight="29.0" prefWidth="186.0" />
+                                    <Label fx:id="lbStart" text="00 시" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+                                 <children>
+                                    <Label text="종료 시간" />
+                                    <ComboBox fx:id="cmbEnd" prefHeight="29.0" prefWidth="186.0" />
+                                    <Label fx:id="lbEnd" text="00 시" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Pane fx:id="calendarPane" layoutX="14.0" layoutY="14.0" prefHeight="469.0" prefWidth="556.0" />
+                        <Button fx:id="btnNext2" layoutX="1015.0" layoutY="516.0" mnemonicParsing="false" text="선택 완료" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab id="tabCheck" text="예약 확인">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
