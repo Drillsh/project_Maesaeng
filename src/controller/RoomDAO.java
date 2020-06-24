@@ -31,7 +31,7 @@ public class RoomDAO {
 			}
 			// con객체를 가지고 쿼리문을 실행할 수 있다 (select, insert, update, delete)
 
-			String query = "select * from roomTbl where roomName like ?";
+			String query = "select * from roomtbl where roomName like ?";
 
 			// query문을 실행하기 위한 준비.
 			pstmt = con.prepareStatement(query);
