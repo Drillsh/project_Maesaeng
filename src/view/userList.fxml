@@ -12,5 +12,7 @@
       <Button id="btnAdd" layoutX="777.0" layoutY="843.0" mnemonicParsing="false" text="수정" />
       <Button id="btnDelete" layoutX="884.0" layoutY="843.0" mnemonicParsing="false" text="삭제" />
       <RadioButton id="rdnBlackList" layoutX="35.0" layoutY="843.0" mnemonicParsing="false" text="블랙리스트 추가" />
+      <TextField id="txtSearch" layoutX="717.0" layoutY="43.0" prefHeight="29.0" prefWidth="278.0" />
+      <Button id="btnSearch" layoutX="1026.0" layoutY="43.0" mnemonicParsing="false" text="검 색" />
    </children>
 </AnchorPane>

@@ -12,7 +12,7 @@ import model.*;
 
 public class UserDAO {
 
-	// user정보 찾아 가져오기
+// user정보 찾아 가져오기
 	public ArrayList<User> loadUserList() {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -41,6 +41,55 @@ public class UserDAO {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("TotalList 점검요망");
 			alert.setHeaderText("TotalList 문제방생");
+			alert.setContentText("문제사항:" + e.getMessage());
+			alert.showAndWait();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return arrayList;
+
+	}
+
+//유저 이름 검색기능 
+	public ArrayList<User> getUserSearch(String name) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<User> arrayList = null;
+		try {
+			con = DBUtil.getConnection();
+			if (con != null) {
+				System.out.println("searchliset.loadUserList : DB 연결 성공");
+			} else {
+				System.out.println("searchliset.loadUserList : DB 연결 실패");
+			}
+			String query = "select * from usertbl where uname like ?";
+
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, "%" + name + "%");
+			
+			rs = pstmt.executeQuery();
+			
+			arrayList = new ArrayList<User>();
+
+			while (rs.next()) {
+				User user = new User(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getString(5));
+				arrayList.add(user);
+			}
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("검색점검요망");
+			alert.setHeaderText("이름을 입력하세요.");
 			alert.setContentText("문제사항:" + e.getMessage());
 			alert.showAndWait();
 		} finally {
