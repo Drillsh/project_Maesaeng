@@ -100,9 +100,24 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab id="tabCheck" text="예약 확인">
+            <Tab id="tabCheck" text="예 약">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="83.0" layoutY="82.0" text="예약자: " />
+                        <Label layoutX="80.0" layoutY="125.0" text="총 인원: " />
+                        <Label layoutX="116.0" layoutY="168.0" text="룸:" />
+                        <Label layoutX="69.0" layoutY="206.0" text="사용 시간: " />
+                        <Label fx:id="lbFinalStime" layoutX="159.0" layoutY="206.0" text="Label" />
+                        <Label layoutX="216.0" layoutY="206.0" text="~" />
+                        <Label fx:id="lbFinalEtime" layoutX="246.0" layoutY="206.0" text="Label" />
+                        <Label fx:id="lbFinalUser" layoutX="159.0" layoutY="82.0" text="Label" />
+                        <Label fx:id="lbFinalNum" layoutX="159.0" layoutY="125.0" text="Label" />
+                        <Label fx:id="lbFinalRoom" layoutX="159.0" layoutY="168.0" text="Label" />
+                        <Label layoutX="91.0" layoutY="268.0" text="요 금: " />
+                        <Label fx:id="lbFinalCharge" layoutX="159.0" layoutY="268.0" text="Label" />
+                        <Button fx:id="btnFinalRev" layoutX="414.0" layoutY="263.0" mnemonicParsing="false" text="예약 하기" />
+                     </children></AnchorPane>
                </content>
             </Tab>
         </tabs>

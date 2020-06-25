@@ -64,6 +64,20 @@ public class UserController implements Initializable {
 	private Label lbStart;
 	@FXML
 	private Label lbEnd;
+	@FXML
+	private Label lbFinalUser;
+	@FXML
+	private Label lbFinalNum;
+	@FXML
+	private Label lbFinalRoom;
+	@FXML
+	private Label lbFinalStime;
+	@FXML
+	private Label lbFinalEtime;
+	@FXML
+	private Label lbFinalCharge;
+	@FXML
+	private Button btnFinalRev;
 
 	public Stage userStage;
 	private ToggleGroup toggleGroup;
@@ -73,32 +87,14 @@ public class UserController implements Initializable {
 
 	public RoomDAO roomDAO = new RoomDAO();
 
-	private String selectedRoomName = new String();
-	private Integer personNum = new Integer(0);
+	private Schedule schedule = new Schedule();
+	private Room room = new Room();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		// [Scene전환] User -> Login
-		// 로그아웃 라벨 핸들러 등록
-		lbLogout.setOnMouseClicked(event -> handleLogoutAction(event));
-
-		// 버튼 토글 그룹 세팅
-		setToggleGroup();
-
-		// 토글 버튼 이벤트
-		toggleGroup.selectedToggleProperty()
-				.addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
-					ToggleButton tBtn = (ToggleButton) toggleGroup.getSelectedToggle();
-					tBtn.setOnAction(event -> handleTogBtnEvent(event));
-				});
-
-		// 달력 등록
-		calendarPane.getChildren().add(new FullCalendarView(YearMonth.now()).getView());
-
-		// 선택완료 버튼 -> 다음페이지 및 해당 페이지 정보 저장
-		btnNext2.setOnAction(event -> tbpTab.getSelectionModel().selectNext());
-		btnNext1.setOnAction(event -> tbpTab.getSelectionModel().selectNext());
+		// 버튼 그룹 초기화
+		btnGroupInitialize();
 
 		// 테이블 초기화
 		tableInitialize();
@@ -106,75 +102,41 @@ public class UserController implements Initializable {
 		// 콤보박스 초기화
 		comboInitialize();
 
-		// 선택 시간 표시
+		// 중복 예약 방지
+		blockOverlapReservation();
+
+		// 토글 버튼 이벤트
+		toggleGroup.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue,
+				Toggle newValue) -> handleTogleAction());
+
+		// 달력 등록
+		calendarPane.getChildren().add(new FullCalendarView(YearMonth.now()).getView());
+
+		// 선택완료 버튼 -> 다음페이지 및 해당 페이지 정보 저장
+		btnNext1.setOnAction(event -> tbpTab.getSelectionModel().selectNext());
+		btnNext2.setOnAction(event -> { 
+			tbpTab.getSelectionModel().selectNext();
+			setFinalrevInfo();
+		});
+
+		// 슬라이더 이벤트, 선택된 값 전달
+		sdrPersonNum.setOnMouseClicked(event -> schedule.setPersonNum((int)sdrPersonNum.getValue()));
+
+		
+		// 콤보박스 예약 시간 선택
 		cmbStart.setOnAction(event -> handleCmbBoxAction(event));
 		cmbEnd.setOnAction(event -> handleCmbBoxAction(event));
+
+		// 예약창 정보 세팅
+		//setFinalrevInfo();
+
+		// [Scene전환] User -> Login
+		// 로그아웃 라벨 핸들러 등록
+		lbLogout.setOnMouseClicked(event -> handleLogoutAction(event));
 	}
 
-	private void handleCmbBoxAction(ActionEvent event) {
-
-		try {
-			if (event.getTarget().equals(cmbStart)) {
-				lbStart.setText(cmbStart.getValue() + " 시");
-				
-				for (Schedule s : sObsList) {
-					if ( cmbStart.getValue() >= s.getStartTime() && cmbStart.getValue() < s.getEndTime()) {
-
-						Alert alert = new Alert(AlertType.WARNING);
-						alert.setTitle("예약 오류");
-						alert.setHeaderText("이미 예약된 시간대입니다!!");
-						alert.setContentText("시간을 다시 선택해주세요");
-						alert.showAndWait();
-					}
-				}
-			}
-			if (event.getTarget().equals(cmbEnd)) {
-				lbEnd.setText(cmbEnd.getValue() + " 시");
-
-				for (Schedule s : sObsList) {
-					if ( cmbStart.getValue() != null &&  cmbEnd.getValue() > s.getStartTime() && cmbEnd.getValue() <= s.getEndTime()) {
-
-						Alert alert = new Alert(AlertType.WARNING);
-						alert.setTitle("예약 오류");
-						alert.setHeaderText("이미 예약된 시간대입니다!!");
-						alert.setContentText("시간을 다시 선택해주세요");
-						alert.showAndWait();
-					}
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("시간 중복 오류");
-		}
-
-	}
-
-	// 로그아웃 라벨 핸들러 등록
-	private void handleLogoutAction(MouseEvent event) {
-
-		// 로그아웃시 화면 전환 : 로그인창으로
-		try {
-
-			Stage primaryStage = new Stage();
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
-			Parent root = loader.load();
-			LoginController loginController = loader.getController();
-			loginController.primaryStage = primaryStage;
-			Scene scene = new Scene(root);
-
-			// scene.getStylesheets().add(getClass().getResource("../application/stu.css").toString());
-			// //css
-
-			primaryStage.setScene(scene);
-
-			userStage.close();
-			primaryStage.show();
-
-		} catch (Exception e) {
-		}
-	}
-
-	// 버튼 토글 그룹 세팅
-	private void setToggleGroup() {
+	// 버튼 그룹 초기화
+	private void btnGroupInitialize() {
 		toggleGroup = new ToggleGroup();
 
 		btnA.setToggleGroup(toggleGroup);
@@ -183,6 +145,83 @@ public class UserController implements Initializable {
 		btnD.setToggleGroup(toggleGroup);
 		btnE.setToggleGroup(toggleGroup);
 		btnF.setToggleGroup(toggleGroup);
+	}
+
+	// 테이블 초기화
+	private void tableInitialize() {
+
+		TableColumn colID = new TableColumn("아이디");
+		colID.setCellValueFactory(new PropertyValueFactory("userID"));
+
+		TableColumn colRoom = new TableColumn("방이름");
+		colRoom.setCellValueFactory(new PropertyValueFactory("roomName"));
+
+		TableColumn colDate = new TableColumn("날 짜");
+		colDate.setCellValueFactory(new PropertyValueFactory("scheduleDate"));
+
+		TableColumn colStart = new TableColumn("시작시간");
+		colStart.setCellValueFactory(new PropertyValueFactory("startTime"));
+
+		TableColumn colEnd = new TableColumn("종료시간");
+		colEnd.setCellValueFactory(new PropertyValueFactory("endTime"));
+
+		TableColumn colPerson = new TableColumn("인 원");
+		colPerson.setCellValueFactory(new PropertyValueFactory("personNum"));
+
+		tlvRevList.getColumns().addAll(colID, colRoom, colDate, colStart, colEnd, colPerson);
+
+		tlvRevList.setItems(sObsList);
+
+	}
+
+	// 콤보 박스 초기화
+	private void comboInitialize() {
+
+		for (int i = 9; i <= 21; ++i) {
+			cmbObsList.add(i);
+		}
+
+		cmbStart.setItems(cmbObsList);
+		cmbEnd.setItems(cmbObsList);
+	}
+
+	// 중복 예약 방지
+	private void blockOverlapReservation() {
+		// 콤보박스 시간 Disable
+		class EndHoursCell extends ListCell<Integer> {
+
+			EndHoursCell() {
+				DBUtil.userCon.cmbStart.valueProperty()
+						.addListener((obs, oldEndHours, newEndHours) -> updateDisableState());
+			}
+
+			@Override
+			protected void updateItem(Integer hours, boolean empty) {
+				super.updateItem(hours, empty);
+				if (empty) {
+					setText(null);
+				} else {
+					setText(hours.toString());
+					updateDisableState();
+				}
+			}
+
+			private void updateDisableState() {
+				boolean disable = getItem() != null && DBUtil.userCon.cmbStart.getValue() != null
+						&& getItem().intValue() <= Integer.valueOf(DBUtil.userCon.cmbStart.getValue());
+				setDisable(disable);
+				setOpacity(disable ? 0.5 : 1);
+
+			}
+		}
+
+		cmbEnd.setCellFactory(lv -> new EndHoursCell());
+	}
+
+	// 토글 버튼 등록
+	private void handleTogleAction() {
+		ToggleButton tBtn = (ToggleButton) toggleGroup.getSelectedToggle();
+		tBtn.setOnAction(event -> handleTogBtnEvent(event));
 	}
 
 	// 토글 버튼 이벤트
@@ -229,74 +268,35 @@ public class UserController implements Initializable {
 			obsList.add(room);
 		}
 
-		int roomSize = ((Room) obsList.get(0)).getSize();
+		room = (Room)obsList.get(0);
+
+		int roomSize = (room.getSize());
 		lbPersonNum.setText(roomSize + " 인실");
+
+		// 전달받은 룸사이즈로 슬라이더 초기화
 		setSliderSize(roomSize);
 
-		lbIsWB.setText((((Room) obsList.get(0)).isWB()) ? "O" : "X");
-		lbIsTV.setText((((Room) obsList.get(0)).isTV()) ? "O" : "X");
-		lbCharge.setText(String.valueOf(((Room) obsList.get(0)).getPrice()));
+		lbIsWB.setText(room.isWB() ? "O" : "X");
+		lbIsTV.setText(room.isTV() ? "O" : "X");
+		lbCharge.setText(room.getPrice() + " 원");
 
-		// 선택한 룸 이름 세팅
-		selectedRoomName = roomName;
+		// 선택한 룸이름 전달
+		schedule.setRoomName(room.getRoomName());
 	}
 
-	// 테이블 초기화
-	private void tableInitialize() {
-
-		TableColumn colID = new TableColumn("아이디");
-		colID.setCellValueFactory(new PropertyValueFactory("userID"));
-
-		TableColumn colRoom = new TableColumn("방이름");
-		colRoom.setCellValueFactory(new PropertyValueFactory("roomName"));
-
-		TableColumn colDate = new TableColumn("날 짜");
-		colDate.setCellValueFactory(new PropertyValueFactory("scheduleDate"));
-
-		TableColumn colStart = new TableColumn("시작시간");
-		colStart.setCellValueFactory(new PropertyValueFactory("startTime"));
-
-		TableColumn colEnd = new TableColumn("종료시간");
-		colEnd.setCellValueFactory(new PropertyValueFactory("endTime"));
-
-		TableColumn colPerson = new TableColumn("인 원");
-		colPerson.setCellValueFactory(new PropertyValueFactory("personNum"));
-
-		tlvRevList.getColumns().addAll(colID, colRoom, colDate, colStart, colEnd, colPerson);
-
-		tlvRevList.setItems(sObsList);
-
-	}
-
-	// 콤보 박스 초기화
-	private void comboInitialize() {
-
-		for (int i = 9; i <= 21; ++i) {
-			// String str = i + " 시";
-			cmbObsList.add(i);
-		}
-		//cmbStart.setCellFactory(lv -> new StartHoursCell());
-		cmbEnd.setCellFactory(lv -> new EndHoursCell());
-
-		cmbStart.setItems(cmbObsList);
-		cmbEnd.setItems(cmbObsList);
-	}
-
-	// 룸별 예약상황 보여주는 리스트
+	// 스케줄 가져오기
 	public void loadRevList(LocalDate date) {
 		ScheduleDAO scheduleDAO = new ScheduleDAO();
-		ArrayList<Schedule> arrayList = scheduleDAO.getRevList(date, selectedRoomName);
+		ArrayList<Schedule> arrayList = scheduleDAO.getRevList(date, schedule.getRoomName());
 
 		if (arrayList == null) {
 			return;
 		} else {
 			sObsList.clear();
 		}
-
+		// 화면에 띄움
 		for (int i = 0; i < arrayList.size(); ++i) {
 			Schedule s = arrayList.get(i);
-
-			// 화면에 관련된 컬렉션프레임워크이므로 이곳에 존재
 			sObsList.add(s);
 		}
 	}
@@ -306,63 +306,88 @@ public class UserController implements Initializable {
 		sdrPersonNum.setMax(personNum);
 	}
 
-	// 중복 예약 방지
-	private void blockOverlapReservation() {
+	// 콤보박스 예약 시간 선택
+	private void handleCmbBoxAction(ActionEvent event) {
 
-	}
+		try {
+			if (event.getTarget().equals(cmbStart)) {
+				int startTime = cmbStart.getValue();
+				lbStart.setText(startTime + " 시");
 
-}
+				// 시작시간 전달
+				schedule.setStartTime(startTime);
 
-// 콤보박스 시간 Disable
-//class StartHoursCell extends ListCell<Integer> {
-//
-//	StartHoursCell() {
-//		DBUtil.userCon.cmbEnd.valueProperty().addListener((obs, oldEndHours, newEndHours) -> updateDisableState());
-//
-//	}
-//
-//	@Override
-//	protected void updateItem(Integer hours, boolean empty) {
-//		super.updateItem(hours, empty);
-//		if (empty) {
-//			setText(null);
-//		} else {
-//			setText(hours.toString());
-//			updateDisableState();
-//		}
-//	}
-//
-//	private void updateDisableState() {
-//		boolean disable = getItem() != null && DBUtil.userCon.cmbEnd.getValue() != null
-//				&& getItem().intValue() >= Integer.valueOf(DBUtil.userCon.cmbEnd.getValue());
-//		setDisable(disable);
-//		setOpacity(disable ? 0.5 : 1);
-//	}
-//}
+				for (Schedule s : sObsList) {
+					if (startTime >= s.getStartTime() && startTime < s.getEndTime()) {
 
-//콤보박스 시간 Disable
-class EndHoursCell extends ListCell<Integer> {
+						Alert alert = new Alert(AlertType.WARNING);
+						alert.setTitle("예약 오류");
+						alert.setHeaderText("이미 예약된 시간대입니다!!");
+						alert.setContentText("시간을 다시 선택해주세요");
+						alert.showAndWait();
+					}
+				}
+			}
+			if (event.getTarget().equals(cmbEnd)) {
+				int endTime = cmbEnd.getValue();
+				lbEnd.setText(endTime + " 시");
 
-	EndHoursCell() {
-		DBUtil.userCon.cmbStart.valueProperty().addListener((obs, oldEndHours, newEndHours) -> updateDisableState());
-	}
+				// 종료시간 전달
+				schedule.setEndTime(endTime);
 
-	@Override
-	protected void updateItem(Integer hours, boolean empty) {
-		super.updateItem(hours, empty);
-		if (empty) {
-			setText(null);
-		} else {
-			setText(hours.toString());
-			updateDisableState();
+				for (Schedule s : sObsList) {
+					if (new Integer(endTime) != null && endTime > s.getStartTime() && endTime <= s.getEndTime()) {
+
+						Alert alert = new Alert(AlertType.WARNING);
+						alert.setTitle("예약 오류");
+						alert.setHeaderText("이미 예약된 시간대입니다!!");
+						alert.setContentText("시간을 다시 선택해주세요");
+						alert.showAndWait();
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.println("시간 중복 오류");
 		}
+
 	}
 
-	private void updateDisableState() {
-		boolean disable = getItem() != null && DBUtil.userCon.cmbStart.getValue() != null
-				&& getItem().intValue() <= Integer.valueOf(DBUtil.userCon.cmbStart.getValue());
-		setDisable(disable);
-		setOpacity(disable ? 0.5 : 1);
+	// 예약창 정보 세팅
+	private void setFinalrevInfo() {
+		// lbFinalUser.setText();
+		lbFinalNum.setText(schedule.getPersonNum() + "명");
+		lbFinalRoom.setText(schedule.getRoomName());
+		lbFinalStime.setText(schedule.getStartTime() + "시");
+		lbFinalEtime.setText(schedule.getEndTime() + "시");
 
+		int totalCharge = room.getPrice() * schedule.getPersonNum();
+
+		lbFinalCharge.setText(totalCharge + " 원");
+	}
+
+	// 로그아웃 라벨 핸들러 등록
+	private void handleLogoutAction(MouseEvent event) {
+
+		// 로그아웃시 화면 전환 : 로그인창으로
+		try {
+
+			Stage primaryStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
+			Parent root = loader.load();
+			LoginController loginController = loader.getController();
+			loginController.primaryStage = primaryStage;
+			Scene scene = new Scene(root);
+
+			// scene.getStylesheets().add(getClass().getResource("../application/stu.css").toString());
+			// //css
+
+			primaryStage.setScene(scene);
+
+			userStage.close();
+			primaryStage.show();
+
+		} catch (Exception e) {
+		}
 	}
 }

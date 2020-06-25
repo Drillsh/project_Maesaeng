@@ -8,6 +8,7 @@ public class Room {
 	private boolean isTV;
 	private int price;
 	
+	public Room() {}
 	
 	public Room(String roomName, int size, int price, boolean isWB, boolean isTV) {
 		this.roomName = roomName;

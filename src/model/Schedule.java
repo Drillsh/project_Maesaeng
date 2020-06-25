@@ -11,6 +11,9 @@ public class Schedule {
 	private int endTime;
 	private int personNum;
 	
+	public Schedule() {
+		
+	}
 
 	public Schedule(String userID, String roomName, LocalDate scheduleDate, int startTime, int endTime, int personNum) {
 		super();
