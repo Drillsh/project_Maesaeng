@@ -5,6 +5,7 @@ import java.net.*;
 import java.sql.*;
 import java.util.*;
 
+import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.event.*;
 import javafx.fxml.*;
@@ -39,7 +40,9 @@ public class ManagerController implements Initializable {
 	private Button btnDelete;
 	@FXML
 	private Label lbList;
-	
+//	@FXML
+//	private TextField txtSearch;
+
 	public Stage stage;
 	public Stage managerStage;
 	private int tableViewSelectedIndex;
@@ -48,42 +51,43 @@ public class ManagerController implements Initializable {
 	private ObservableList<ImageView> albumList = FXCollections.observableArrayList();
 	private Stage editstage;
 	private Stage albumstage;
-	private File selectFile= null;
+	private File selectFile = null;
 	private String localUrl = "";
 	private Image localImage;
+	private ToggleGroup toggleGroup;
+	private ImageView selectedImage = new ImageView();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//tableviewColuminitialize();
-		
+
 		// 예약관리버튼 이벤트 등록
 		btnManagement.setOnAction(event -> handlebtnManagementAction(event));
 		// 회원수정 버튼 이벤트 등록
 		btnEdit.setOnAction(event -> handlebtnEditAction(event));
-		//로그아웃 라벨클릭 이벤트 등록
+		// 로그아웃 라벨클릭 이벤트 등록
 		lbLogout.setOnMouseClicked(event -> handlelbLogoutAction(event));
-		//앨범관리 버튼이벤트등록
+		// 앨범관리 버튼이벤트등록
 		btnAlbum.setOnAction(event -> handlebtnAlbumAction(event));
 
 	}
 
+	// 앨범관리버튼 이베튼핸들러
 	private void handlebtnAlbumAction(ActionEvent event) {
-		
-		
+
 		getTotalAlbumList();
-		
+
 		Parent root = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("/view/album.fxml"));
 			Scene scene = new Scene(root);
-		
+
 			albumstage = new Stage(StageStyle.UTILITY);
 			albumstage.initOwner(stage);
 			albumstage.setScene(scene);
 			albumstage.setResizable(false);
 			albumstage.setTitle("사진앨범");
 			albumstage.show();
-			
+
 			ImageView image1 = (ImageView) scene.lookup("#image1");
 			ImageView image2 = (ImageView) scene.lookup("#image2");
 			ImageView image3 = (ImageView) scene.lookup("#image3");
@@ -95,7 +99,7 @@ public class ManagerController implements Initializable {
 			ImageView image9 = (ImageView) scene.lookup("#image9");
 			Button btnChangePhoto = (Button) scene.lookup("#btnChangePhoto");
 			Button btnremove = (Button) scene.lookup("#btnremove");
-			
+
 			albumList.add(image1);
 			albumList.add(image2);
 			albumList.add(image3);
@@ -105,38 +109,44 @@ public class ManagerController implements Initializable {
 			albumList.add(image7);
 			albumList.add(image8);
 			albumList.add(image9);
-			
+
 			// DB 에서 사진을 싹 긁어와서 띄움
 			albumInitialize(albumList);
 
-			//사진수정 버튼이벤트 등록
-			btnChangePhoto.setOnAction(e -> handlebtnChangePhotoAction(event));
-			
-		} catch (IOException e) {
+			// 사진수정 버튼이벤트 등록
+			btnChangePhoto.setOnAction(e -> handlebtnChangePhotoAction(e));
 
+			// 클릭을 인식하는 이미지뷰 이벤트핸들러
+			image1.setOnMouseClicked(e -> handleImage1ClickAction(e));
+
+		} catch (IOException e) {
 		}
+
 	}
 
-	// 사진 초기화 
+	
+	private void handleImage1ClickAction(MouseEvent e) {
+		selectedImage = (ImageView)e.getTarget();
+	}
+
+	// 사진 초기화
 	private void albumInitialize(ObservableList<ImageView> albumList) {
-		
-		
-		for(int i =0; i < albumObsList.size(); i++) {
+		for (int i = 0; i < albumObsList.size(); i++) {
 			localUrl = albumObsList.get(i).getPhoto();
 			System.out.println(localUrl);
-			if(albumObsList.get(i).getPhoto()==null) {
-				localImage = new Image("file:///C:/images/default.jpg",false);
+			if (albumObsList.get(i).getPhoto() == null) {
+				localImage = new Image("file:///C:/images/default.jpg", false);
 				albumList.get(i).setImage(localImage);
-			}else {
-				localImage = new Image(localUrl,false);
+			} else {
+				localImage = new Image(localUrl, false);
 				albumList.get(i).setImage(localImage);
 			}
 		}
 	}
 
-		public void getTotalAlbumList() {
+	public void getTotalAlbumList() {
 
-	//  앨범 객체 가져옴
+		// 앨범 객체 가져옴
 
 		AlbumDAO albumDAO = new AlbumDAO();
 
@@ -152,27 +162,23 @@ public class ManagerController implements Initializable {
 		}
 	}
 
+	//수정버튼핸들러
 	private void handlebtnChangePhotoAction(ActionEvent event) {
+		
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image File", "*.png", "*.jpg", "*.gif"));
+		selectFile = fileChooser.showOpenDialog(albumstage);
+		
 		try {
-			selectFile = fileChooser.showOpenDialog(albumstage);
 			if (selectFile != null) {
+				
 				localUrl = selectFile.toURI().toURL().toString();
 				Image image = new Image(localUrl, false);
-
+				selectedImage.setImage(image);
 			}
 		} catch (MalformedURLException e) {
 
 		}
-
-	}
-
-	private void handleTableViewPressedAction(MouseEvent event) {
-//		 tableViewSelectedIndex = tlvList.getSelectionModel().getSelectedIndex();
-	}
-
-	private void tableviewColuminitialize() {
 
 	}
 
@@ -274,8 +280,6 @@ public class ManagerController implements Initializable {
 			editstage.setTitle("회원리스트");
 			editstage.show();
 
-			//User user = obslist.get(tableViewSelectedIndex);
-
 			UserDAO userDAO = new UserDAO();
 			ArrayList<User> arraylist = new ArrayList<User>();
 			arraylist = userDAO.loadUserList();
@@ -286,14 +290,22 @@ public class ManagerController implements Initializable {
 			}
 
 			tlvList.setItems(obslist);
-
+			
+			Button btnSearch = (Button) scene.lookup("#btnSearch");
 			Button btnSave = (Button) scene.lookup("#btnSave");
 			Button btnAdd = (Button) scene.lookup("#btnAdd");
 			Button btnDelete = (Button) scene.lookup("#btnDelete");
+			TextField txtSearch = (TextField) scene.lookup("#txtSearch");
 
-			// 수정버튼이벤트 핸들러
-			btnAdd.setOnAction(e -> handlebtnAddAction(event));
-			btnDelete.setOnAction(e -> handlebtnDeleteAction(event));
+			// 수정버튼이벤트등록
+			btnAdd.setOnAction(e -> handlebtnAddAction(e));
+			// 삭제버튼이벤트등록
+			btnDelete.setOnAction(e -> handlebtnDeleteAction(e));
+			// 검색버튼이벤트등록
+			btnSearch.setOnAction(e -> handlebtnSearchAction(e, txtSearch));
+			
+			tlvList.setOnMouseClicked(e -> tableViewSelectedIndex = tlvList.getSelectionModel().getSelectedIndex());
+			
 		} catch (Exception e) {
 
 		}
@@ -301,6 +313,32 @@ public class ManagerController implements Initializable {
 
 	}
 
+	// 회원리스트에서 유저이름 검색기능을하는 핸들러
+	private void handlebtnSearchAction(ActionEvent event, TextField txtSearch) {
+		try {
+//		txtSearch.getText().trim();
+			UserDAO userDAO = new UserDAO();
+			ArrayList<User> searchlist = userDAO.getUserSearch(txtSearch.getText().trim());
+			if (txtSearch.getText().trim().equals("")) {
+				throw new Exception();
+			}
+			if (searchlist.size() != 0) {
+				obslist.clear();
+				for (int i = 0; i < searchlist.size(); i++) {
+					User u = searchlist.get(i);
+					obslist.add(u);
+				}
+			}
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("이름입력요망");
+			alert.setHeaderText("이름을 입력하세요");
+			alert.setContentText("주의하세요");
+			alert.showAndWait();
+		}
+	}
+
+	// 회원리스트 삭제버튼 핸들러
 	private void handlebtnDeleteAction(ActionEvent event) {
 		UserDAO userDAO = new UserDAO();
 		String query = "delete from usertbl where userid=?";
