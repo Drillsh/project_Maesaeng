@@ -1,13 +1,10 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.*;
 import model.*;
 
 public class UserDAO {
@@ -76,9 +73,9 @@ public class UserDAO {
 
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, "%" + name + "%");
-			
+
 			rs = pstmt.executeQuery();
-			
+
 			arrayList = new ArrayList<User>();
 
 			while (rs.next()) {
@@ -107,7 +104,8 @@ public class UserDAO {
 		return arrayList;
 
 	}
-	//아이디로 검색
+
+	// 아이디로 검색
 	public ArrayList<User> getIdSearch(String id) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -124,9 +122,9 @@ public class UserDAO {
 
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, id);
-			
+
 			rs = pstmt.executeQuery();
-			
+
 			arrayList = new ArrayList<User>();
 
 			while (rs.next()) {
@@ -213,12 +211,13 @@ public class UserDAO {
 	}
 
 //회원관리창안에서 데이터베이스 저장된내용을 수정하는 디비연동
-	public int UserRegistry(User user) {
+	public int userRegistry(User user) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
 
 		int returnValue = 0;
+		
 		try {
 			con = DBUtil.getConnection();
 			if (con != null) {
@@ -226,24 +225,20 @@ public class UserDAO {
 			} else {
 				System.out.println("userDAO.UserRegistry: DB 연동 실패");
 			}
-			String query = "insert into usertbl value(null,?,?,?)";
+			
+			String query = "insert into usertbl values(?,?,?,?,?)";
 
 			pstmt = con.prepareStatement(query);
+			
 			pstmt.setString(1, user.getUserid());
 			pstmt.setString(2, user.getPassword());
 			pstmt.setString(3, user.getName());
-			pstmt.setString(4, user.getMail());
+			pstmt.setString(4, user.getPhone());
+			pstmt.setString(5, user.getMail());
 
 			returnValue = pstmt.executeUpdate();
-			if (returnValue != 0) {
-				Alert alert = new Alert(AlertType.WARNING);
-				alert.setTitle("저장 성공");
-				alert.setHeaderText(user.getName() + "님 저장 성공");
-				alert.setContentText(user.getName() + "님 HELLO");
-				alert.showAndWait();
-			} else {
-				throw new Exception(user.getName() + "문제 발생");
-			}
+			
+		
 		} catch (Exception e) {
 		} finally {
 			try {
@@ -305,4 +300,5 @@ public class UserDAO {
 		return returnValue;
 
 	}
+	
 }

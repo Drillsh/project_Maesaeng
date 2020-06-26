@@ -21,7 +21,7 @@
       <Label layoutX="28.0" layoutY="335.0" text="핸드폰 번호" />
       <Label layoutX="28.0" layoutY="392.0" text="이메일" />
       <Label layoutX="26.0" layoutY="223.0" text="비밀번호 확인" />
-      <Button id="btnReco" layoutX="94.0" layoutY="450.0" mnemonicParsing="false" text="가입하기" />
+      <Button id="btnReco" disable="true" layoutX="94.0" layoutY="450.0" mnemonicParsing="false" text="가입하기" />
       <Button id="btnEnd" layoutX="275.0" layoutY="450.0" mnemonicParsing="false" text="취소" />
       <ImageView fitHeight="64.0" fitWidth="50.0" layoutX="16.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -32,10 +32,10 @@
       <PasswordField id="pxtPw" layoutX="136.0" layoutY="163.0" />
       <PasswordField id="pxtCheckPw" layoutX="136.0" layoutY="219.0" />
       <TextField id="txfName" layoutX="136.0" layoutY="274.0" />
-      <TextField id="c" layoutX="136.0" layoutY="331.0" />
+      <TextField id="txfPhone" layoutX="136.0" layoutY="331.0" />
       <TextField id="txfEmail" layoutX="136.0" layoutY="388.0" />
       <Button id="btnAgainId" layoutX="318.0" layoutY="102.0" mnemonicParsing="false" text="중복확인" />
-      <Button id="btnAgainPw" layoutX="318.0" layoutY="220.0" mnemonicParsing="false" text="가능여부" />
+      <Label id="lbCheckPw" layoutX="339.0" layoutY="224.0" />
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
