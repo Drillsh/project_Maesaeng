@@ -76,9 +76,9 @@ public class UserDAO {
 
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, "%" + name + "%");
-			
+
 			rs = pstmt.executeQuery();
-			
+
 			arrayList = new ArrayList<User>();
 
 			while (rs.next()) {
@@ -255,6 +255,6 @@ public class UserDAO {
 			}
 		} // finally
 		return returnValue;
-
 	}
+
 }
