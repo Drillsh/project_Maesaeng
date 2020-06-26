@@ -107,6 +107,54 @@ public class UserDAO {
 		return arrayList;
 
 	}
+	//아이디로 검색
+	public ArrayList<User> getIdSearch(String id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<User> arrayList = null;
+		try {
+			con = DBUtil.getConnection();
+			if (con != null) {
+				System.out.println("userDAO.getIdSearch : DB 연결 성공");
+			} else {
+				System.out.println("userDAO.getIdSearch : DB 연결 실패");
+			}
+			String query = "select * from usertbl where userID = ?";
+
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, id);
+			
+			rs = pstmt.executeQuery();
+			
+			arrayList = new ArrayList<User>();
+
+			while (rs.next()) {
+				User user = new User(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getString(5));
+				arrayList.add(user);
+			}
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("검색점검요망");
+			alert.setHeaderText("아이디을 입력하세요.");
+			alert.setContentText("문제사항:" + e.getMessage());
+			alert.showAndWait();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return arrayList;
+
+	}
 
 //수정 이벤트 디비연동	
 	public int getUpdate(User user) {

@@ -1,16 +1,26 @@
 package controller;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-import javafx.event.*;
-import javafx.fxml.*;
-import javafx.scene.*;
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.*;
-import javafx.scene.input.*;
-import javafx.stage.*;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import model.User;
 
 public class LoginController implements Initializable {
 
@@ -44,25 +54,66 @@ public class LoginController implements Initializable {
 	// 회원가입 창 and 정보입력
 	private void handleMemberAction(MouseEvent event) {
 		Stage memberStage = new Stage();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/member.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/signUp.fxml"));
 		Parent root = null;
 		try {
 			root = loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		Scene scene = new Scene(root);
 		memberStage.setScene(scene);
 		primaryStage.close();
 		memberStage.show();
 
 		// ++++++++++++++++++++++++++++++각 텍스트필드 정의+++++++++++++++++++++++++++++++++++
-		TextField mName = (TextField) root.lookup("#mName");
-		TextField mId = (TextField) root.lookup("#mId");
-		TextField mphone = (TextField) root.lookup("#mphone");
-		TextField mEmail = (TextField) root.lookup("#joinName");
-		PasswordField mPw = (PasswordField) root.lookup("#mPw");
-		PasswordField mPw2 = (PasswordField) root.lookup("#mPw2");
+		TextField txfName = (TextField) root.lookup("#txfName");
+		TextField txfId = (TextField) root.lookup("#txfId");
+		TextField txfPhone = (TextField) root.lookup("#txfPhone");
+		TextField txfEmail = (TextField) root.lookup("#txfEmail");
+		PasswordField pxtPw = (PasswordField) root.lookup("#pxtPw");
+		PasswordField pxtCheckPw = (PasswordField) root.lookup("#pxtCheckPw");
+		Button btnAgainId = (Button) root.lookup("#btnAgainId");
+		Button btnAgainPw = (Button) root.lookup("#btnAgainPw");
+		Button btnReco = (Button) root.lookup("#btnReco");
+		Button btnEnd = (Button) root.lookup("#btnEnd");
+
+		btnAgainId.setOnAction(e -> handleBtnAgainIdAction(e, txfId));
+
+	}
+
+	private void handleBtnAgainIdAction(ActionEvent event, TextField txfId) {
+		String id = null;
+		UserDAO userDAO = new UserDAO();
+		ArrayList<User> arrayList = null;
+		User user;
+
+		id = txfId.getText();
+		if (id.equals(null)) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("아이디 중복확인 에러");
+			alert.setHeaderText("이이디를 입력하세요");
+			alert.showAndWait();
+			
+			return;
+		}
+	
+		arrayList = userDAO.getIdSearch(id);
+		user = arrayList.get(0); 
+		if(user != null) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("아이디 중복확인"); 
+			alert.setHeaderText("중복된 아이디입니다.");
+			alert.setContentText("다른 아이디를 입력해주세요");
+			alert.showAndWait();
+
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("아이디 중복확인");
+			alert.setHeaderText("사용 가능한 아이디입니다.");
+			alert.showAndWait();
+		}
 
 	}
 
@@ -122,7 +173,5 @@ public class LoginController implements Initializable {
 				alert.showAndWait();
 			}
 		} // end of if
-
 	}
-
 }
