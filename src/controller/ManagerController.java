@@ -3,6 +3,7 @@ package controller;
 import java.io.*;
 import java.net.*;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
 
 import javafx.beans.Observable;
@@ -46,7 +47,7 @@ public class ManagerController implements Initializable {
 	public Stage managerStage;
 	private int tableViewSelectedIndex;
 	private ObservableList<User> obslist = FXCollections.observableArrayList();
-	private ObservableList<Notice> obsnoticelist = FXCollections.observableArrayList();
+	private ObservableList<Notice> obsNoticeList = FXCollections.observableArrayList();
 	private ObservableList<Album> albumObsList = FXCollections.observableArrayList();
 	private Stage editstage;
 	private Stage albumstage;
@@ -75,115 +76,123 @@ public class ManagerController implements Initializable {
 	// 공지사항 이벤트 핸들러
 	private void handlebtnNoticeAction(ActionEvent e) {
 		Parent root = null;
+		albumstage = new Stage(StageStyle.UTILITY);
+		
 		try {
 			root = FXMLLoader.load(getClass().getResource("/view/notice.fxml"));
 			Scene scene = new Scene(root);
-			
+
 			TableView tlvNotice = (TableView) scene.lookup("#tlvNotice");
-			
+
 			TableColumn colNo = new TableColumn("번호");
-			colNo.setCellValueFactory(new PropertyValueFactory("colNo"));
+			colNo.setCellValueFactory(new PropertyValueFactory("noticeNo"));
 
 			TableColumn colTitle = new TableColumn("제목");
-			colTitle.setCellValueFactory(new PropertyValueFactory("colTitle"));
+			colTitle.setCellValueFactory(new PropertyValueFactory("title"));
 
 			TableColumn colContents = new TableColumn("내용");
-			colContents.setCellValueFactory(new PropertyValueFactory("colContents"));
+			colContents.setCellValueFactory(new PropertyValueFactory("contents"));
 
 			TableColumn colDate = new TableColumn("등록 날짜");
-			colDate.setCellValueFactory(new PropertyValueFactory("colDate"));
+			colDate.setCellValueFactory(new PropertyValueFactory("noticeDate"));
 
 			tlvNotice.getColumns().addAll(colNo, colTitle, colContents, colDate);
-			
-			
+
 			Button btnNoticeAdd = (Button) scene.lookup("#btnNoticeAdd");
 			Button btnNoticeEdit = (Button) scene.lookup("#btnNoticeEdit");
 			Button btnNoticeDelete = (Button) scene.lookup("#btnNoticeDelete");
-			
-			
-			//공지사항에 추가버튼이벤트등록  추가버튼을누르면 공지사항제목과 내용을 입력 
+
+			// 공지사항에 추가버튼이벤트등록 추가버튼을누르면 공지사항제목과 내용을 입력
 			btnNoticeAdd.setOnAction(event -> handlebtnNoticeAddAction(event));
+
+			// 테이블뷰에 저장된 테이블을 클릭해서 선택액션하는 이벤트
+			tlvNotice.setOnMouseClicked(
+					evnet -> tableViewSelectedIndex = tlvNotice.getSelectionModel().getSelectedIndex());
+
+	
+			NoticeDAO noticeDAO = new NoticeDAO();
+			obsNoticeList = noticeDAO.getNoticeLoadTotalList();
 			
-			//
-			tlvNotice.setOnMouseClicked(evnet -> tableViewSelectedIndex = tlvNotice.getSelectionModel().getSelectedIndex());
+			tlvNotice.setItems(obsNoticeList);
 			
-			
-			albumstage = new Stage(StageStyle.UTILITY);
 			albumstage.initOwner(stage);
 			albumstage.setScene(scene);
 			albumstage.setResizable(false);
 			albumstage.setTitle("공지사항");
 			albumstage.show();
 			
-//			tlvNotice.setItems(obslist);
 		} catch (IOException e1) {
 		}
 	}
-	//공지사항의 제목과 내용을입력하는 창
 
+	// 공지사항의 제목과 내용을입력하는 창
 	private void handlebtnNoticeAddAction(ActionEvent event) {
 		Parent root = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("/view/noticecontents.fxml"));
 			Scene scene = new Scene(root);
-			
+
 			TextField txtTitle = (TextField) scene.lookup("#txtTitle");
 			TextArea txaContents = (TextArea) scene.lookup("#txaContents");
 			Button btnNoticeSave = (Button) scene.lookup("#btnNoticeSave");
-			
-			Notice notice = obsnoticelist.get(tableViewSelectedIndex);
-			
-			txtTitle.setText(txtTitle.getText());			
+
+			txtTitle.setText(txtTitle.getText());
 			txaContents.setText(txaContents.getText());
-			
-			//공지사항  제목 내용 저장버튼
-			btnNoticeSave.setOnAction(e-> {
-				
-				txtTitle.setText(txtTitle.getText());
-				txaContents.setText(txaContents.getText());
+
+			// 공지사항 제목 내용 저장버튼
+			btnNoticeSave.setOnAction(e -> {
+				Notice notice = new Notice();
+
+				notice.setTitle(txtTitle.getText());
+				notice.setContents(txaContents.getText());
+
 				int returnValue = 0;
-				int no =notice.getNoticeNo();
+				
 				NoticeDAO noticeDAO = new NoticeDAO();
-				returnValue = noticeDAO.NoticeUpdate(notice,0);
+				returnValue = noticeDAO.getNoticeInsert(notice); 
+				
 				if (returnValue != 0) {
-					obsnoticelist.get(tableViewSelectedIndex);
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("공지사항 저장");
+					alert.setHeaderText("공지사항저장 성공");
+					alert.showAndWait();
 				} else {
 					System.out.println("연결실패");
 				}
 			});
-			
+
 			noticestage = new Stage(StageStyle.UTILITY);
 			noticestage.initOwner(stage);
 			noticestage.setScene(scene);
 			noticestage.setResizable(false);
 			noticestage.setTitle("공지사항");
 			noticestage.show();
-			
+
 			NoticeDAO noticeDAO = new NoticeDAO();
 			ArrayList<Notice> arraylist = new ArrayList<Notice>();
-			arraylist = (ArrayList<Notice>) noticeDAO.getNoticeLoadTotalList();
 
 			for (int i = 0; i < arraylist.size(); i++) {
 				Notice n = arraylist.get(i);
-				obsnoticelist.add(n);
+				obsNoticeList.add(n);
 			}
-			
+
 		} catch (IOException e) {
-			
+
 		}
 	}
-	//공지사항 의 제목과 내용을 테이블과 DB에 저장하는 버튼
-	private void handlebtnNoticeSaveAction(ActionEvent e) {
-		
-	}
+	// 공지사항 의 제목과 내용을 테이블과 DB에 저장하는 버튼
+//	private void handlebtnNoticeSaveAction(ActionEvent e) {
+//		
+//	}
 
 	// 앨범관리버튼 이베튼핸들러
 	private void handlebtnAlbumAction(ActionEvent event) {
 
 		ObservableList<ImageView> albumList = FXCollections.observableArrayList();
-		
-		if(albumObsList != null) albumObsList.clear();
-		
+
+		if (albumObsList != null)
+			albumObsList.clear();
+
 		getTotalAlbumList();
 
 		Parent root = null;
@@ -210,7 +219,6 @@ public class ManagerController implements Initializable {
 			Button btnChangePhoto = (Button) scene.lookup("#btnChangePhoto");
 			Button btnremove = (Button) scene.lookup("#btnremove");
 
-			
 			albumList.add(image1);
 			albumList.add(image2);
 			albumList.add(image3);
@@ -237,12 +245,10 @@ public class ManagerController implements Initializable {
 
 			// 사진수정 버튼이벤트 등록
 			btnChangePhoto.setOnAction(e -> handlebtnChangePhotoAction(e));
-			
+
 		} catch (IOException e) {
 		}
 	}
-
-
 
 	// 선택된 사진 초기화
 	private void handleImage1ClickAction(MouseEvent e) {
@@ -252,10 +258,9 @@ public class ManagerController implements Initializable {
 	// 사진 초기화
 	private void albumInitialize(ObservableList<ImageView> albumList) {
 
-		
 		for (int i = 0; i < albumObsList.size() - 1; i++) {
 			localUrl = albumObsList.get(i).getPhoto();
-			
+
 			if (albumObsList.get(i).getPhoto() == null) {
 				localImage = new Image(albumObsList.get(10).getPhoto(), false);
 				albumList.get(i).setImage(localImage);
@@ -264,7 +269,7 @@ public class ManagerController implements Initializable {
 				albumList.get(i).setImage(localImage);
 			}
 		}
-		
+
 	}
 
 	// DB연동 핸들러
