@@ -55,26 +55,47 @@ public class AlbumDAO {
 	}
 
 	// 앨범관리 수정버튼 DB연동
-	public Album AlbumUpdate(Album album, int no) {
+	public void getalbumUpdate(String url, int imgViewIndex) {
 
-		String dml = "update albumtbl set" + "image = ? where no = ?";
 		Connection con = null;
 		PreparedStatement pstmt = null;
+		int returnValue = 0;
+		
+		
 		try {
 			con = DBUtil.getConnection();
-
-			pstmt = con.prepareStatement(dml);
-			pstmt.setString(1, album.getPhoto());
-			pstmt.setInt(2, no);
-
-			int i = pstmt.executeUpdate();
-			if (i == 1) {
-
+			if (con != null) {
+				System.out.println("AlbumDAO.getalbumUpdate : DB 연결 성공");
 			} else {
-				return null;
+				System.out.println("AlbumDAO.getalbumUpdate : DB 연결 실패");
+			}
+			
+			
+			String query = "update albumtbl set photo =? where no = ?" ;
+
+			pstmt = con.prepareStatement(query);
+			
+			pstmt.setString(1, url);
+			pstmt.setInt(2, imgViewIndex);
+			
+			returnValue= pstmt.executeUpdate();
+			
+			if (returnValue == 1) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("사진  수정");
+				alert.setHeaderText(imgViewIndex + "번 사진 수정 성공!!");
+				alert.showAndWait();
+			} else {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("사진수정");
+				alert.setHeaderText("사진수정 문제발생.");
+				alert.showAndWait();
 			}
 		} catch (Exception e) {
-			System.out.println("테스트입니다.");
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("사진수정");
+			alert.setHeaderText("사진수정 문제발생222.");
+			alert.showAndWait();
 		} finally {
 			try {
 				if (pstmt != null)
@@ -85,7 +106,6 @@ public class AlbumDAO {
 			}
 		}
 
-		return album;
 	}
 
 	// 앨범관리 삭제 DB연동
@@ -134,4 +154,6 @@ public class AlbumDAO {
 		return returnValue;
 
 	}
+
+	
 }

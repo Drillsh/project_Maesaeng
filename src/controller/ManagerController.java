@@ -36,8 +36,7 @@ public class ManagerController implements Initializable {
 	private TextArea txtMemo;
 	@FXML
 	private Label lbMemo;
-	@FXML
-	private Button btnDelete;
+
 	@FXML
 	private Label lbList;
 //	@FXML
@@ -47,10 +46,11 @@ public class ManagerController implements Initializable {
 	public Stage managerStage;
 	private int tableViewSelectedIndex;
 	private ObservableList<User> obslist = FXCollections.observableArrayList();
+	private ObservableList<Notice> obsnoticelist = FXCollections.observableArrayList();
 	private ObservableList<Album> albumObsList = FXCollections.observableArrayList();
-	private ObservableList<ImageView> albumList = FXCollections.observableArrayList();
 	private Stage editstage;
 	private Stage albumstage;
+	private Stage noticestage;
 	private File selectFile = null;
 	private String localUrl = "";
 	private Image localImage;
@@ -78,20 +78,112 @@ public class ManagerController implements Initializable {
 		try {
 			root = FXMLLoader.load(getClass().getResource("/view/notice.fxml"));
 			Scene scene = new Scene(root);
+			
+			TableView tlvNotice = (TableView) scene.lookup("#tlvNotice");
+			
+			TableColumn colNo = new TableColumn("번호");
+			colNo.setCellValueFactory(new PropertyValueFactory("colNo"));
 
+			TableColumn colTitle = new TableColumn("제목");
+			colTitle.setCellValueFactory(new PropertyValueFactory("colTitle"));
+
+			TableColumn colContents = new TableColumn("내용");
+			colContents.setCellValueFactory(new PropertyValueFactory("colContents"));
+
+			TableColumn colDate = new TableColumn("등록 날짜");
+			colDate.setCellValueFactory(new PropertyValueFactory("colDate"));
+
+			tlvNotice.getColumns().addAll(colNo, colTitle, colContents, colDate);
+			
+			
+			Button btnNoticeAdd = (Button) scene.lookup("#btnNoticeAdd");
+			Button btnNoticeEdit = (Button) scene.lookup("#btnNoticeEdit");
+			Button btnNoticeDelete = (Button) scene.lookup("#btnNoticeDelete");
+			
+			
+			//공지사항에 추가버튼이벤트등록  추가버튼을누르면 공지사항제목과 내용을 입력 
+			btnNoticeAdd.setOnAction(event -> handlebtnNoticeAddAction(event));
+			
+			//
+			tlvNotice.setOnMouseClicked(evnet -> tableViewSelectedIndex = tlvNotice.getSelectionModel().getSelectedIndex());
+			
+			
 			albumstage = new Stage(StageStyle.UTILITY);
 			albumstage.initOwner(stage);
 			albumstage.setScene(scene);
 			albumstage.setResizable(false);
 			albumstage.setTitle("공지사항");
 			albumstage.show();
+			
+//			tlvNotice.setItems(obslist);
 		} catch (IOException e1) {
 		}
+	}
+	//공지사항의 제목과 내용을입력하는 창
+
+	private void handlebtnNoticeAddAction(ActionEvent event) {
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("/view/noticecontents.fxml"));
+			Scene scene = new Scene(root);
+			
+			TextField txtTitle = (TextField) scene.lookup("#txtTitle");
+			TextArea txaContents = (TextArea) scene.lookup("#txaContents");
+			Button btnNoticeSave = (Button) scene.lookup("#btnNoticeSave");
+			
+			Notice notice = obsnoticelist.get(tableViewSelectedIndex);
+			
+			txtTitle.setText(txtTitle.getText());			
+			txaContents.setText(txaContents.getText());
+			
+			//공지사항  제목 내용 저장버튼
+			btnNoticeSave.setOnAction(e-> {
+				
+				txtTitle.setText(txtTitle.getText());
+				txaContents.setText(txaContents.getText());
+				int returnValue = 0;
+				int no =notice.getNoticeNo();
+				NoticeDAO noticeDAO = new NoticeDAO();
+				returnValue = noticeDAO.NoticeUpdate(notice,0);
+				if (returnValue != 0) {
+					obsnoticelist.get(tableViewSelectedIndex);
+				} else {
+					System.out.println("연결실패");
+				}
+			});
+			
+			noticestage = new Stage(StageStyle.UTILITY);
+			noticestage.initOwner(stage);
+			noticestage.setScene(scene);
+			noticestage.setResizable(false);
+			noticestage.setTitle("공지사항");
+			noticestage.show();
+			
+			NoticeDAO noticeDAO = new NoticeDAO();
+			ArrayList<Notice> arraylist = new ArrayList<Notice>();
+			arraylist = (ArrayList<Notice>) noticeDAO.getNoticeLoadTotalList();
+
+			for (int i = 0; i < arraylist.size(); i++) {
+				Notice n = arraylist.get(i);
+				obsnoticelist.add(n);
+			}
+			
+		} catch (IOException e) {
+			
+		}
+	}
+	//공지사항 의 제목과 내용을 테이블과 DB에 저장하는 버튼
+	private void handlebtnNoticeSaveAction(ActionEvent e) {
+		
 	}
 
 	// 앨범관리버튼 이베튼핸들러
 	private void handlebtnAlbumAction(ActionEvent event) {
 
+		ObservableList<ImageView> albumList = FXCollections.observableArrayList();
+		
+		if(albumObsList != null) albumObsList.clear();
+		
 		getTotalAlbumList();
 
 		Parent root = null;
@@ -118,6 +210,7 @@ public class ManagerController implements Initializable {
 			Button btnChangePhoto = (Button) scene.lookup("#btnChangePhoto");
 			Button btnremove = (Button) scene.lookup("#btnremove");
 
+			
 			albumList.add(image1);
 			albumList.add(image2);
 			albumList.add(image3);
@@ -131,63 +224,51 @@ public class ManagerController implements Initializable {
 			// DB 에서 사진을 싹 긁어와서 띄움
 			albumInitialize(albumList);
 
-			// 사진수정 버튼이벤트 등록
-			btnChangePhoto.setOnAction(e -> handlebtnChangePhotoAction(e));
-
 			// 클릭을 인식하는 이미지뷰 이벤트핸들러
 			image1.setOnMouseClicked(e -> handleImage1ClickAction(e));
-			// 앨범관리창 사진삭제버튼 이벤트등록
-			btnremove.setOnAction(e -> handlebtnremoveAction(e));
+			image2.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image3.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image4.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image5.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image6.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image7.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image8.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image9.setOnMouseClicked(e -> handleImage1ClickAction(e));
+
+			// 사진수정 버튼이벤트 등록
+			btnChangePhoto.setOnAction(e -> handlebtnChangePhotoAction(e));
+			
 		} catch (IOException e) {
 		}
-
 	}
 
-	// 앨범관리에 사진삭제버튼 이벤트등록 함수
-	private void handlebtnremoveAction(ActionEvent e) {
-		try {
-			AlbumDAO albumDAO = new AlbumDAO();
-			String query = "delete from albumtbl";
-			Album album = albumObsList.get(tableViewSelectedIndex);
-			int no = album.getAlbumNo();
-			int returnValue = albumDAO.getAlbumDelete(no);
-			if (returnValue != 0) {
-				albumObsList.remove(tableViewSelectedIndex);
-			}
-		} catch (Exception e1) {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("테이블뷰 삭제 에러");
-			alert.setHeaderText("삭제 점검요망");
-			alert.setContentText("삭제주의하세요");
-			alert.showAndWait();
-		}
-	}
 
-	// 앨범 관리 이미지수정 핸들러
+
+	// 선택된 사진 초기화
 	private void handleImage1ClickAction(MouseEvent e) {
 		selectedImage = (ImageView) e.getTarget();
 	}
 
 	// 사진 초기화
 	private void albumInitialize(ObservableList<ImageView> albumList) {
-		for (int i = 0; i < albumObsList.size(); i++) {
+
+		
+		for (int i = 0; i < albumObsList.size() - 1; i++) {
 			localUrl = albumObsList.get(i).getPhoto();
-			System.out.println(localUrl);
+			
 			if (albumObsList.get(i).getPhoto() == null) {
-				localImage = new Image("file:///C:/images/default.jpg", false);
+				localImage = new Image(albumObsList.get(10).getPhoto(), false);
 				albumList.get(i).setImage(localImage);
 			} else {
 				localImage = new Image(localUrl, false);
 				albumList.get(i).setImage(localImage);
 			}
-
 		}
-
+		
 	}
 
 	// DB연동 핸들러
 	public void getTotalAlbumList() {
-
 		// 앨범 객체 가져옴
 
 		AlbumDAO albumDAO = new AlbumDAO();
@@ -204,7 +285,7 @@ public class ManagerController implements Initializable {
 		}
 	}
 
-	// 수정버튼핸들러
+	// 앨범관리 수정버튼핸들러
 	private void handlebtnChangePhotoAction(ActionEvent event) {
 
 		FileChooser fileChooser = new FileChooser();
@@ -213,15 +294,23 @@ public class ManagerController implements Initializable {
 
 		try {
 			if (selectFile != null) {
-
 				localUrl = selectFile.toURI().toURL().toString();
 				Image image = new Image(localUrl, false);
 				selectedImage.setImage(image);
 			}
+
+			int imgViewIndex = selectedImage.getId().charAt(5) - '0';
+
+			AlbumDAO albumDAO = new AlbumDAO();
+
+			albumDAO.getalbumUpdate(localUrl, imgViewIndex);
+
 		} catch (MalformedURLException e) {
-
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("사진 수정");
+			alert.setHeaderText("사진수정 실행 문제발생.");
+			alert.showAndWait();
 		}
-
 	}
 
 	// 유저 DB연동핸들러
@@ -341,13 +430,13 @@ public class ManagerController implements Initializable {
 			Button btnDelete = (Button) scene.lookup("#btnDelete");
 			TextField txtSearch = (TextField) scene.lookup("#txtSearch");
 
-			// 수정버튼이벤트등록
+			// 회원관리 수정버튼이벤트등록
 			btnAdd.setOnAction(e -> handlebtnAddAction(e));
-			// 삭제버튼이벤트등록
+			// 회원관리 삭제버튼이벤트등록
 			btnDelete.setOnAction(e -> handlebtnDeleteAction(e));
 			// 검색버튼이벤트등록
 			btnSearch.setOnAction(e -> handlebtnSearchAction(e, txtSearch));
-			// 앨범관리창에 사진을선택하는 이벤트등록
+			// 회원수정창 테이블 클릭 이벤트
 			tlvList.setOnMouseClicked(e -> tableViewSelectedIndex = tlvList.getSelectionModel().getSelectedIndex());
 
 		} catch (Exception e) {
@@ -389,7 +478,7 @@ public class ManagerController implements Initializable {
 		String str = user.getUserid();
 		int returnValue = userDAO.UserDelete(str);
 		if (returnValue != 0) {
-			obslist.remove(tableViewSelectedIndex);
+			obslist.remove(selectedImage);
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
