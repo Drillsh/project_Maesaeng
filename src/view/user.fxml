@@ -12,13 +12,13 @@
       <Label layoutX="235.0" layoutY="70.0" text="홈" />
       <Label layoutX="317.0" layoutY="70.0" text="앨범" />
       <Label layoutX="402.0" layoutY="70.0" text="공지사항" />
-      <Label layoutX="979.0" layoutY="70.0" text="이름" />
+      <Label fx:id="lbLoginUser" layoutX="959.0" layoutY="70.0" text="이름" />
       <Label fx:id="lbLogout" layoutX="1088.0" layoutY="70.0" text="로그아웃" />
       <Label layoutX="45.0" layoutY="24.0" prefHeight="74.0" prefWidth="78.0" text="로고" />
       <Separator layoutX="33.0" layoutY="129.0" prefHeight="6.0" prefWidth="1115.0" />
       <TabPane fx:id="tbpTab" layoutX="45.0" layoutY="186.0" prefHeight="593.0" prefWidth="1115.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="스터디룸">
+          <Tab text="1. 스터디룸">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="395.0" prefWidth="878.0">
                      <children>
@@ -61,12 +61,12 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <Button fx:id="btnNext1" layoutX="1016.0" layoutY="501.0" mnemonicParsing="false" text="선택 완료" />
+                        <Button fx:id="btnNext1" layoutX="976.0" layoutY="501.0" mnemonicParsing="false" text="선택 완료 &gt;&gt;" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab id="tabSchedule" text="일 정 ">
+          <Tab id="tabSchedule" fx:id="tabSchedule" disable="true" text="2. 일 정 ">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -96,11 +96,11 @@
                            </children>
                         </VBox>
                         <Pane fx:id="calendarPane" layoutX="14.0" layoutY="14.0" prefHeight="469.0" prefWidth="556.0" />
-                        <Button fx:id="btnNext2" layoutX="1015.0" layoutY="516.0" mnemonicParsing="false" text="선택 완료" />
+                        <Button fx:id="btnNext2" layoutX="985.0" layoutY="506.0" mnemonicParsing="false" text="선택 완료 &gt;&gt;" />
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab id="tabCheck" text="예 약">
+            <Tab id="tabCheck" fx:id="tabReservation" disable="true" text="3. 예 약">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
