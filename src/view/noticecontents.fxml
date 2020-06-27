@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -7,10 +8,11 @@
 
 <AnchorPane prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="29.0" layoutY="41.0" prefHeight="19.0" prefWidth="38.0" text="제목:" />
+      <Label layoutX="29.0" layoutY="131.0" prefHeight="19.0" prefWidth="38.0" text="제목:" />
       <Label layoutX="29.0" layoutY="174.0" prefHeight="19.0" prefWidth="44.0" text="내용:" />
-      <TextField id="txtTitle" layoutX="85.0" layoutY="36.0" />
+      <TextField id="txtTitle" layoutX="85.0" layoutY="126.0" />
       <TextArea id="txaContents" layoutX="29.0" layoutY="203.0" prefHeight="410.0" prefWidth="654.0" />
       <Button id="btnNoticeSave" layoutX="596.0" layoutY="638.0" mnemonicParsing="false" text="저장" />
+      <ImageView fitHeight="95.0" fitWidth="134.0" layoutX="1.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

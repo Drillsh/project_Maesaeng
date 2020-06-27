@@ -12,20 +12,25 @@ public class NoticeDAO {
 	public ObservableList<Notice> getNoticeLoadTotalList() {
 
 		ObservableList<Notice> NoticeList = FXCollections.observableArrayList();
-		String query = "select * from noticetbl";
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		Notice notice = null;
 
 		try {
 			con = DBUtil.getConnection();
-			pstmt = con.prepareCall(query);
+			if (con != null) {
+				System.out.println("NoticeDAO.getNoticeLoadTotalList : DB 연결 성공");
+			} else {
+				System.out.println("NoticeDAO.getNoticeLoadTotalList : DB 연결 실패");
+			}
+			
+			String query = "select * from noticetbl";
+			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				notice = new Notice(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4).toLocalDate());
+				Notice notice = new Notice(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4).toLocalDate());
 				NoticeList.add(notice);
 			}
 		} catch (Exception e) {
@@ -39,8 +44,7 @@ public class NoticeDAO {
 				if (con != null)
 					con.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
 			}
 		}
 
@@ -68,6 +72,51 @@ public class NoticeDAO {
 			pstmt.setDate(4, Date.valueOf(notice.getNoticeDate()));
 
 			returnValue = pstmt.executeUpdate();
+			if (returnValue != 0) {
+
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+
+			} catch (SQLException e) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("공 지 사 항");
+				alert.setContentText("저장:" + e.getMessage());
+				alert.showAndWait();
+			}
+			return returnValue;
+
+		}
+	}
+
+	public int getNoticeInsert(Notice notice) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int returnValue = 0;
+
+		try {
+			con = DBUtil.getConnection();
+			if (con != null) {
+				System.out.println("NoticeDAO.getNoticeInsert : DB 연결 성공");
+			} else {
+				System.out.println("NoticeDAO.getNoticeInsert : DB 연결 실패");
+			}
+			String query = "insert into noticetbl value(null, ? , ?, ?);";
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, notice.getTitle());
+			pstmt.setString(2, notice.getContents());
+			pstmt.setDate(3, Date.valueOf(notice.getNoticeDate().now()));
+
+			returnValue = pstmt.executeUpdate();
+			
 			if (returnValue != 0) {
 
 			} else {

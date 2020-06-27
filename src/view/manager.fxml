@@ -13,7 +13,7 @@
       <Button fx:id="btnNotice" layoutX="627.0" layoutY="61.0" mnemonicParsing="false" text="공지사항" />
       <Button fx:id="btnAlbum" layoutX="341.0" layoutY="218.0" mnemonicParsing="false" text="앨범관리" />
       <Button fx:id="btnManagement" layoutX="341.0" layoutY="61.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="80.0" text="예약관리" />
-      <Label fx:id="lbId" layoutX="577.0" layoutY="23.0" text="관리자아이디" underline="true" />
+      <Label fx:id="lbId" layoutX="577.0" layoutY="23.0" text="admin" underline="true" />
       <Label fx:id="lbLogout" layoutX="713.0" layoutY="23.0" text="로그아웃" underline="true" />
       <TextArea fx:id="txtMemo" layoutX="14.0" layoutY="372.0" prefHeight="408.0" prefWidth="251.0" />
       <Label fx:id="lbMemo" layoutX="14.0" layoutY="332.0" text="인수인계메모" />
@@ -23,7 +23,7 @@
       <Label layoutX="74.0" layoutY="52.0" />
       <ImageView fitHeight="220.0" fitWidth="200.0" layoutX="62.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../Pictures/Saved%20Pictures/KakaoTalk_20200618_172103952.jpg" />
+            <Image url="@../../../../images/image9.jpg" />
          </image>
       </ImageView>
    </children>
