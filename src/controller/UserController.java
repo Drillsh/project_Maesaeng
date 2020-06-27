@@ -78,6 +78,12 @@ public class UserController implements Initializable {
 	private Label lbFinalCharge;
 	@FXML
 	private Button btnFinalRev;
+	@FXML
+	private Tab tabSchedule;
+	@FXML
+	private Tab tabReservation;
+	@FXML
+	private Label lbLoginUser;
 
 	public Stage userStage;
 	private ToggleGroup toggleGroup;
@@ -92,7 +98,10 @@ public class UserController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		
+		// 로그인한 유저 아이디 띄우기
+		lbLoginUser.setText(LoginController.user.getName() + " 님 [ " + LoginController.user.getUserid() + " ]");
+		
 		// 버튼 그룹 초기화
 		btnGroupInitialize();
 
@@ -113,28 +122,35 @@ public class UserController implements Initializable {
 		calendarPane.getChildren().add(new FullCalendarView(YearMonth.now()).getView());
 
 		// 선택완료 버튼 -> 다음페이지 및 해당 페이지 정보 저장
-		btnNext1.setOnAction(event -> tbpTab.getSelectionModel().selectNext());
-		btnNext2.setOnAction(event -> { 
+		btnNext1.setOnAction(event -> {
 			tbpTab.getSelectionModel().selectNext();
+			tabSchedule.setDisable(false);
+		});
+		btnNext2.setOnAction(event -> {
+			tbpTab.getSelectionModel().selectNext();
+			tabReservation.setDisable(false);
 			setFinalrevInfo();
 		});
 
 		// 슬라이더 이벤트, 선택된 값 전달
-		sdrPersonNum.setOnMouseClicked(event -> schedule.setPersonNum((int)sdrPersonNum.getValue()));
+		sdrPersonNum.setOnMouseClicked(event -> schedule.setPersonNum((int) sdrPersonNum.getValue()));
 
-		
 		// 콤보박스 예약 시간 선택
 		cmbStart.setOnAction(event -> handleCmbBoxAction(event));
 		cmbEnd.setOnAction(event -> handleCmbBoxAction(event));
+		
+		// 예약하기 버튼 이벤트
+		btnFinalRev.setOnAction(event -> handleBtnFinalRevAction());
+		
 
-		// 예약창 정보 세팅
-		//setFinalrevInfo();
-
-		// [Scene전환] User -> Login
-		// 로그아웃 라벨 핸들러 등록
+		// [Scene전환] User -> Login  // 로그아웃 라벨 핸들러 등록
 		lbLogout.setOnMouseClicked(event -> handleLogoutAction(event));
 	}
 
+	private void handleBtnFinalRevAction() {
+		
+	}
+	
 	// 버튼 그룹 초기화
 	private void btnGroupInitialize() {
 		toggleGroup = new ToggleGroup();
@@ -268,7 +284,7 @@ public class UserController implements Initializable {
 			obsList.add(room);
 		}
 
-		room = (Room)obsList.get(0);
+		room = (Room) obsList.get(0);
 
 		int roomSize = (room.getSize());
 		lbPersonNum.setText(roomSize + " 인실");
@@ -325,6 +341,7 @@ public class UserController implements Initializable {
 						alert.setHeaderText("이미 예약된 시간대입니다!!");
 						alert.setContentText("시간을 다시 선택해주세요");
 						alert.showAndWait();
+
 					}
 				}
 			}
@@ -355,7 +372,8 @@ public class UserController implements Initializable {
 
 	// 예약창 정보 세팅
 	private void setFinalrevInfo() {
-		// lbFinalUser.setText();
+		
+		lbFinalUser.setText(LoginController.user.getName() + " 님 [ "+LoginController.user.getUserid()+" ]");
 		lbFinalNum.setText(schedule.getPersonNum() + "명");
 		lbFinalRoom.setText(schedule.getRoomName());
 		lbFinalStime.setText(schedule.getStartTime() + "시");
