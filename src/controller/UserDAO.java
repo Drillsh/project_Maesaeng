@@ -1,13 +1,10 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.*;
 import model.*;
 
 public class UserDAO {
@@ -108,6 +105,55 @@ public class UserDAO {
 
 	}
 
+	// 아이디로 검색
+	public ArrayList<User> getIdSearch(String id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<User> arrayList = null;
+		try {
+			con = DBUtil.getConnection();
+			if (con != null) {
+				System.out.println("userDAO.getIdSearch : DB 연결 성공");
+			} else {
+				System.out.println("userDAO.getIdSearch : DB 연결 실패");
+			}
+			String query = "select * from usertbl where userID = ?";
+
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, id);
+
+			rs = pstmt.executeQuery();
+
+			arrayList = new ArrayList<User>();
+
+			while (rs.next()) {
+				User user = new User(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getString(5));
+				arrayList.add(user);
+			}
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("검색점검요망");
+			alert.setHeaderText("아이디을 입력하세요.");
+			alert.setContentText("문제사항:" + e.getMessage());
+			alert.showAndWait();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+			}
+		}
+
+		return arrayList;
+
+	}
+
 //수정 이벤트 디비연동	
 	public int getUpdate(User user) {
 		Connection con = null;
@@ -165,12 +211,13 @@ public class UserDAO {
 	}
 
 //회원관리창안에서 데이터베이스 저장된내용을 수정하는 디비연동
-	public int UserRegistry(User user) {
+	public int userRegistry(User user) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
 
 		int returnValue = 0;
+		
 		try {
 			con = DBUtil.getConnection();
 			if (con != null) {
@@ -178,24 +225,20 @@ public class UserDAO {
 			} else {
 				System.out.println("userDAO.UserRegistry: DB 연동 실패");
 			}
-			String query = "insert into usertbl value(null,?,?,?)";
+			
+			String query = "insert into usertbl values(?,?,?,?,?)";
 
 			pstmt = con.prepareStatement(query);
+			
 			pstmt.setString(1, user.getUserid());
 			pstmt.setString(2, user.getPassword());
 			pstmt.setString(3, user.getName());
-			pstmt.setString(4, user.getMail());
+			pstmt.setString(4, user.getPhone());
+			pstmt.setString(5, user.getMail());
 
 			returnValue = pstmt.executeUpdate();
-			if (returnValue != 0) {
-				Alert alert = new Alert(AlertType.WARNING);
-				alert.setTitle("저장 성공");
-				alert.setHeaderText(user.getName() + "님 저장 성공");
-				alert.setContentText(user.getName() + "님 HELLO");
-				alert.showAndWait();
-			} else {
-				throw new Exception(user.getName() + "문제 발생");
-			}
+			
+		
 		} catch (Exception e) {
 		} finally {
 			try {
