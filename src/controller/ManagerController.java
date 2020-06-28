@@ -6,6 +6,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
 
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.*;
 import javafx.event.*;
@@ -47,8 +48,9 @@ public class ManagerController implements Initializable {
 	public Stage managerStage;
 	private int tableViewSelectedIndex;
 	private ObservableList<User> obslist = FXCollections.observableArrayList();
-	private ObservableList<Notice> obsNoticeList = FXCollections.observableArrayList();
 	private ObservableList<Album> albumObsList = FXCollections.observableArrayList();
+	private ObservableList<Notice> noticeObsList = FXCollections.observableArrayList();
+	private ArrayList<Notice> noticeArrayList = new ArrayList<>();
 	private Stage editstage;
 	private Stage albumstage;
 	private Stage noticestage;
@@ -77,7 +79,7 @@ public class ManagerController implements Initializable {
 	private void handlebtnNoticeAction(ActionEvent e) {
 		Parent root = null;
 		albumstage = new Stage(StageStyle.UTILITY);
-		
+
 		try {
 			root = FXMLLoader.load(getClass().getResource("/view/notice.fxml"));
 			Scene scene = new Scene(root);
@@ -108,20 +110,114 @@ public class ManagerController implements Initializable {
 			// 테이블뷰에 저장된 테이블을 클릭해서 선택액션하는 이벤트
 			tlvNotice.setOnMouseClicked(
 					evnet -> tableViewSelectedIndex = tlvNotice.getSelectionModel().getSelectedIndex());
-
-	
+			// 테이블뷰에 서 선택된 공지사항 삭제이벤트등록
+			btnNoticeDelete.setOnAction(event -> hanclebtnNoticeDeleteAction(event));
+			// 테이블뷰에 저장된 공지사항 수정버튼 이벤트등록
+			btnNoticeEdit.setOnAction(event -> handlebtnNoticeEditAction(event));
 			NoticeDAO noticeDAO = new NoticeDAO();
-			obsNoticeList = noticeDAO.getNoticeLoadTotalList();
-			
-			tlvNotice.setItems(obsNoticeList);
-			
+			noticeArrayList = noticeDAO.getNoticeLoadTotalList();
+
+			for (int i = 0; i < noticeArrayList.size(); i++) {
+				Notice n = noticeArrayList.get(i);
+				noticeObsList.add(n);
+			}
+
+			tlvNotice.setItems(noticeObsList);
+
 			albumstage.initOwner(stage);
 			albumstage.setScene(scene);
 			albumstage.setResizable(false);
 			albumstage.setTitle("공지사항");
 			albumstage.show();
-			
+
 		} catch (IOException e1) {
+
+		}
+	}
+
+	// 테이블뷰에 저장된 공지사항을 수정이벤트
+	private void handlebtnNoticeEditAction(ActionEvent event) {
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("/view/NoticeEdit.fxml"));
+			Scene scene = new Scene(root);
+
+			TextField txtEditTitle = (TextField) scene.lookup("#txtEditTitle");
+			TextArea txaEditContents = (TextArea) scene.lookup("#txaEditContents");
+			Button btnNoticeSave = (Button) scene.lookup("#btnNoticeSave");
+
+			Notice n = noticeObsList.get(tableViewSelectedIndex);
+
+			txtEditTitle.setText(n.getTitle());
+			txaEditContents.setText(n.getContents());
+
+			// 공지사항 수정창 저장버튼이벤트드등록
+			btnNoticeSave.setOnAction(e -> {
+				Notice notice = noticeObsList.get(tableViewSelectedIndex);
+
+				notice.setTitle(txtEditTitle.getText());
+				notice.setContents(txtEditTitle.getText());
+
+				int returnValue = 0;
+
+				NoticeDAO noticeDAO = new NoticeDAO();
+
+				returnValue = noticeDAO.getNoticeUpdate(notice);
+
+				if (returnValue != 0) {
+					noticeObsList.set(tableViewSelectedIndex, notice);
+				} else {
+					System.out.println("공지사항수정 연결실패");
+				}
+				noticestage.close();
+				noticeObsList.clear();
+				getNoticeLoadTotalList();
+			});
+
+			NoticeDAO noticeDAO = new NoticeDAO();
+			ArrayList<Notice> arraylist = new ArrayList<Notice>();
+
+			for (int i = 0; i < arraylist.size(); i++) {
+				Notice notice = arraylist.get(i);
+				noticeObsList.add(notice);
+			}
+
+			noticestage = new Stage(StageStyle.UTILITY);
+			noticestage.initOwner(stage);
+			noticestage.setScene(scene);
+			noticestage.setResizable(false);
+			noticestage.setTitle("공지사항");
+			noticestage.show();
+		} catch (IOException e) {
+
+		}
+
+	}
+
+	// 테이블뷰에 저장된 데이터를 삭제하는 버튼 기능 구현
+	private void hanclebtnNoticeDeleteAction(ActionEvent e) {
+		NoticeDAO noticeDAO = new NoticeDAO();
+		Notice notice = noticeObsList.get(tableViewSelectedIndex);
+		int no = notice.getNoticeNo();
+		int returnVlue = noticeDAO.getNoticeDelete(notice);
+		if (returnVlue != 0) {
+			noticeObsList.clear();
+			getNoticeLoadTotalList();
+		} else {
+			System.out.println("연결 실패");
+		}
+	}
+
+	// 데이터베이스에 있는 정보를 다가져오기
+	private void getNoticeLoadTotalList() {
+		NoticeDAO noticeDAO = new NoticeDAO();
+		ArrayList<Notice> noticeList = noticeDAO.getNoticeLoadTotalList();
+		if (noticeList == null) {
+			return;
+		}
+		for (int i = 0; i < noticeList.size(); i++) {
+			Notice n = noticeList.get(i);
+			noticeObsList.add(n);
 		}
 	}
 
@@ -147,10 +243,10 @@ public class ManagerController implements Initializable {
 				notice.setContents(txaContents.getText());
 
 				int returnValue = 0;
-				
+
 				NoticeDAO noticeDAO = new NoticeDAO();
-				returnValue = noticeDAO.getNoticeInsert(notice); 
-				
+				returnValue = noticeDAO.getNoticeInsert(notice);
+
 				if (returnValue != 0) {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("공지사항 저장");
@@ -160,6 +256,9 @@ public class ManagerController implements Initializable {
 					System.out.println("연결실패");
 				}
 			});
+			noticestage.close();
+			noticeObsList.clear();
+			getNoticeLoadTotalList();
 
 			noticestage = new Stage(StageStyle.UTILITY);
 			noticestage.initOwner(stage);
@@ -173,17 +272,13 @@ public class ManagerController implements Initializable {
 
 			for (int i = 0; i < arraylist.size(); i++) {
 				Notice n = arraylist.get(i);
-				obsNoticeList.add(n);
+				noticeObsList.add(n);
 			}
 
 		} catch (IOException e) {
 
 		}
 	}
-	// 공지사항 의 제목과 내용을 테이블과 DB에 저장하는 버튼
-//	private void handlebtnNoticeSaveAction(ActionEvent e) {
-//		
-//	}
 
 	// 앨범관리버튼 이베튼핸들러
 	private void handlebtnAlbumAction(ActionEvent event) {
@@ -453,7 +548,6 @@ public class ManagerController implements Initializable {
 	// 회원리스트에서 유저이름 검색기능을하는 핸들러
 	private void handlebtnSearchAction(ActionEvent event, TextField txtSearch) {
 		try {
-//		txtSearch.getText().trim();
 			UserDAO userDAO = new UserDAO();
 			ArrayList<User> searchlist = userDAO.getUserSearch(txtSearch.getText().trim());
 			if (txtSearch.getText().trim().equals("")) {
@@ -478,7 +572,6 @@ public class ManagerController implements Initializable {
 	// 회원리스트 삭제버튼 핸들러
 	private void handlebtnDeleteAction(ActionEvent event) {
 		UserDAO userDAO = new UserDAO();
-		String query = "delete from usertbl where userid=?";
 		User user = obslist.get(tableViewSelectedIndex);
 		String str = user.getUserid();
 		int returnValue = userDAO.UserDelete(str);

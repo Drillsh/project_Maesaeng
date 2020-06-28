@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import javafx.collections.*;
 import javafx.scene.control.Alert;
@@ -9,9 +10,9 @@ import model.*;
 
 public class NoticeDAO {
 	// DB연동
-	public ObservableList<Notice> getNoticeLoadTotalList() {
+	public ArrayList<Notice> getNoticeLoadTotalList() {
 
-		ObservableList<Notice> NoticeList = FXCollections.observableArrayList();
+		ArrayList<Notice> noticeList = new ArrayList<>();
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -24,14 +25,14 @@ public class NoticeDAO {
 			} else {
 				System.out.println("NoticeDAO.getNoticeLoadTotalList : DB 연결 실패");
 			}
-			
+
 			String query = "select * from noticetbl";
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				Notice notice = new Notice(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4).toLocalDate());
-				NoticeList.add(notice);
+				noticeList.add(notice);
 			}
 		} catch (Exception e) {
 
@@ -44,11 +45,11 @@ public class NoticeDAO {
 				if (con != null)
 					con.close();
 			} catch (SQLException e) {
-				
+
 			}
 		}
 
-		return NoticeList;
+		return noticeList;
 	}
 
 	// 테이블뷰에 저장된값을 DB에 저장
@@ -97,6 +98,7 @@ public class NoticeDAO {
 		}
 	}
 
+	// 테이블뷰에 추가삽입
 	public int getNoticeInsert(Notice notice) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -116,7 +118,7 @@ public class NoticeDAO {
 			pstmt.setDate(3, Date.valueOf(notice.getNoticeDate().now()));
 
 			returnValue = pstmt.executeUpdate();
-			
+
 			if (returnValue != 0) {
 
 			} else {
@@ -140,5 +142,88 @@ public class NoticeDAO {
 			return returnValue;
 
 		}
+	}
+
+	// 테이블뷰에 저장된 테이블을 클릭해서 선택액션하는 이벤트
+	public int getNoticeDelete(Notice notice) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int returnValue = 0;
+
+		try {
+			con = DBUtil.getConnection();
+			String query = "delete from noticetbl where no = ?";
+			pstmt = con.prepareStatement(query);
+
+			pstmt.setInt(1, notice.getNoticeNo());
+
+			returnValue = pstmt.executeUpdate();
+
+			if (con != null) {
+				System.out.println("NoticeDAO.getNoticeDelete : DB 연결 성공");
+			} else {
+				System.out.println("NoticeDAO.getNoticeDelete : DB 연결 실패");
+			}
+
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("삭제 성공");
+			alert.setHeaderText(notice + "번 삭제 성공");
+			alert.setContentText(notice + "님 바위");
+			alert.showAndWait();
+		}
+
+		return returnValue;
+	}
+
+	// 테이블뷰에 저장된 공지사항을 수정이벤트 DB
+	public int getNoticeUpdate(Notice notice) {
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int returnValue = 0;
+
+		try {
+			con = DBUtil.getConnection();
+			String query = "update noticetbl set  title = ? , contents = ? where no = ?";
+			pstmt = con.prepareStatement(query);
+
+			pstmt.setString(1, notice.getTitle());
+			pstmt.setString(2, notice.getContents());
+			pstmt.setInt(3, notice.getNoticeNo());
+
+			returnValue = pstmt.executeUpdate();
+
+			if (returnValue != 0) {
+
+			} else {
+				throw new Exception();
+			}
+			if (con != null) {
+				System.out.println("NoticeDAO.getNoticeUpdate : DB 연결 성공");
+			} else {
+				System.out.println("NoticeDAO.getNoticeUpdate : DB 연결 실패");
+			}
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("수정 성공");
+			alert.setHeaderText(notice + "번 수정 성공");
+			alert.setContentText(notice + "님 수정됐네요 ^^");
+			alert.showAndWait();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+
+			} catch (SQLException e) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("공 지 사 항");
+				alert.setContentText("수정:" + e.getMessage());
+				alert.showAndWait();
+			}
+		}
+		return returnValue;
 	}
 }
