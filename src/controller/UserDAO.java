@@ -210,8 +210,8 @@ public class UserDAO {
 		return returnValue;
 	}
 
-//회원관리창안에서 데이터베이스 저장된내용을 수정하는 디비연동
-	public int userRegistry(User user) {
+//회원 등록
+	public int registerUser(User user) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -221,9 +221,9 @@ public class UserDAO {
 		try {
 			con = DBUtil.getConnection();
 			if (con != null) {
-				System.out.println("userDAO.UserRegistry: DB 연동 성공");
+				System.out.println("userDAO.registerUser: DB 연동 성공");
 			} else {
-				System.out.println("userDAO.UserRegistry: DB 연동 실패");
+				System.out.println("userDAO.registerUser: DB 연동 실패");
 			}
 			
 			String query = "insert into usertbl values(?,?,?,?,?)";

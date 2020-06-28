@@ -9,7 +9,7 @@ public class Schedule {
 	private LocalDate scheduleDate;
 	private int startTime;
 	private int endTime;
-	private int personNum;
+	private int personNum = 1;
 	
 	public Schedule() {
 		

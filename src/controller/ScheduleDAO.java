@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.*;
 import java.util.*;
 
@@ -71,6 +72,51 @@ public class ScheduleDAO {
 
 			return arrayList;
 		}
+
+	}
+	
+	public int registerSchedule(Schedule schedule) {
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		int returnValue = 0;
+		
+		try {
+			con = DBUtil.getConnection();
+			if (con != null) {
+				System.out.println("ScheduleDAO.registerSchedule: DB 연동 성공");
+			} else {
+				System.out.println("ScheduleDAO.registerSchedule: DB 연동 실패");
+			}
+			String query = "insert into scheduletbl values(?,?,?,?,?,?)";
+
+			pstmt = con.prepareStatement(query);
+			
+			pstmt.setString(1, schedule.getUserID());
+			pstmt.setString(2, schedule.getRoomName());
+			pstmt.setDate(3, Date.valueOf(schedule.getScheduleDate()));
+			pstmt.setInt(4, schedule.getStartTime());
+			pstmt.setInt(5, schedule.getEndTime());
+			pstmt.setInt(6, schedule.getPersonNum());
+
+			returnValue = pstmt.executeUpdate();
+			
+		
+		} catch (Exception e) {
+			
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+
+			}
+		} // finally
+
+		return returnValue;
 
 	}
 	

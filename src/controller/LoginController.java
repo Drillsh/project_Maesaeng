@@ -140,7 +140,7 @@ public class LoginController implements Initializable {
 
 		UserDAO userDAO = new UserDAO();
 
-		int returnValue = userDAO.userRegistry(user);
+		int returnValue = userDAO.registerUser(user);
 
 		if (returnValue != 0) {
 			Alert alert = new Alert(AlertType.WARNING);
