@@ -44,11 +44,176 @@ public class LoginController implements Initializable {
 		btnLogin.setOnAction(event -> handleLoginAction(event));
 		// 회원가입 클릭 이벤트 등록
 		lbMember.setOnMouseClicked(event -> handleMemberAction(event));
+		// 아이디 찾기 이벤트 등록
+		lbFindId.setOnMouseClicked(event -> handleFindIdAction(event));
+		// 비밀번호 찾기 이벤트 등록
+		lbFindPw.setOnMouseClicked(event -> handleFindPwAction(event));
+	}
+
+	// 비밀번호 찾기 마우스 이벤트 등록
+	private void handleFindPwAction(MouseEvent event) {
+		Stage findPwStage = new Stage();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/findpw.fxml"));
+		Parent root = null;
+		try {
+			root = loader.load();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Scene scene = new Scene(root);
+		findPwStage.setScene(scene);
+		findPwStage.show();
+
+		// +++++++++++++++++++++각각 공간 정의해주기++++++++++++++++++++
+		TextField txfName = (TextField) root.lookup("#txfName");
+		TextField txfId = (TextField) root.lookup("#txfId");
+		TextField txfPhone = (TextField) root.lookup("#txfPhone");
+		Button btnOkay = (Button) root.lookup("#btnOkay");
+		Button btnCancel = (Button) root.lookup("#btnCancel");
+		Label lbMessage = (Label) root.lookup("#lbMessage");
+
+		// 비밀번호 찾기 확인버튼 이벤트 등록
+		btnOkay.setOnAction(e -> handleBtnOkayAction1(txfName, txfId, txfPhone));
+		btnCancel.setOnAction(e->findPwStage.close());
+}		
+	
+	// 비밀번호 찾기 확인버튼 이벤트 등록++++++++++++
+	private void handleBtnOkayAction1(TextField txfName, TextField txfId, TextField txfPhone) {
+		UserDAO userDAO = new UserDAO();
+		ArrayList<User> arrayList = null;
+		User user;
+		String name = txfName.getText().trim();
+		String id = txfId.getText().trim();
+		String phone = txfPhone.getText().trim();
+
+		//필드에 아무값도 입력되지 않을때
+		if (name.equals("")) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("비밀번호 찾기");
+			alert.setHeaderText("이름을 입력하세요");
+			alert.showAndWait();
+			return;
+		}
+		
+		//리스트에서 이름을 검색해 리스트에 저장한다
+		arrayList = userDAO.getUserSearch(name);
+		
+		//빈 공간이 아닐경우
+		if (!arrayList.isEmpty()) {
+			
+			String foundPw = findPw(arrayList,id,phone);
+			//foundPw가 null이 아닐 경우를 출력한다
+			if(foundPw != null) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("비밀번호 찾기");
+				alert.setHeaderText("회원님의 비밀번호는 "+ foundPw +"입니다");
+				alert.showAndWait();
+			} else {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("비밀번호 찾기");
+				alert.setHeaderText("일치하는 회원정보가 없습니다");
+				alert.showAndWait();
+			}//end of if if
+		}//end of if 
+	}
+	
+	//db의 정보와 입력값을 비교하는 함수
+	public String findPw(ArrayList<User> arrayList , String id , String phone) {
+		for (User user : arrayList) {
+			if(user.getPhone().equals(phone) && user.getUserid().equals(id)) {
+				return user.getPassword();
+			}
+		}//end of for
+		return null;
+	}//end of findPw
+
+	// 아이디 찾기 이벤트 등록//
+	private void handleFindIdAction(MouseEvent event) {
+		Stage findIdStage = new Stage();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/findid.fxml"));
+		Parent root = null;
+		try {
+			root = loader.load();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Scene scene = new Scene(root);
+		findIdStage.setScene(scene);
+		findIdStage.show();
+
+		// +++++++++++++++++++++각각 공간 정의해주기++++++++++++++++++++
+
+		TextField txfName = (TextField) root.lookup("#txfName");
+		TextField txfPhone = (TextField) root.lookup("#txfPhone");
+		Button btnOkay = (Button) root.lookup("#btnOkay");
+		Button btnCancel = (Button) root.lookup("#btnCancel");
+		Label lbMessage = (Label) root.lookup("#lbMessage");
+
+		// 찾기 버튼 이벤트 등록
+		btnOkay.setOnAction(e -> handleBtnOkayAction(txfName, txfPhone));
+		btnCancel.setOnAction(e->findIdStage.close());
+		
+	}
+
+	// 아이이 찾기 확인버튼 이벤트 등록==========/
+	private void handleBtnOkayAction(TextField txfName, TextField txfPhone) {
+		UserDAO userDAO = new UserDAO();
+		ArrayList<User> arrayList = null;
+		User user;
+		String name = txfName.getText().trim();
+		String phone = txfPhone.getText().trim();
+
+		if (name.equals("")) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("아이디 찾기");
+			alert.setHeaderText("이름을 입력하세요");
+			alert.showAndWait();
+			return;
+		}// end of if
+		 		
+		arrayList = userDAO.getUserSearch(name);
+
+		if(!arrayList.isEmpty()) {
+			
+			String foundId = findId(arrayList, phone);
+			
+			if( foundId != null) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("아이디 찾기");
+				alert.setHeaderText("회원님의 아이디는 "+ foundId  +" 입니다");
+				alert.showAndWait();
+			}else {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("아이디 찾기");
+				alert.setHeaderText("일치하는 정보의 회원이 없습니다");
+				alert.showAndWait();
+			}
+			
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("아이디 찾기");
+			alert.setHeaderText("정보를 확인하세요");
+			alert.showAndWait();
+		}
+		//arrayList = userDAO.getUserSearch(phone);
+	}
+	
+	//db의 정보와 입력값을 비교하는 함수
+	private String findId(ArrayList<User> arrayList, String phone) {
+		
+		for(User user : arrayList) {
+			
+			if(user.getPhone().equals(phone)) {
+				
+				return user.getUserid();
+			}
+		}
+		return null;
 	}
 
 	// 회원가입 창 and 정보입력
 	private void handleMemberAction(MouseEvent event) {
-		
+		// 아이디 찾기 폴더 연동하기
 		Stage memberStage = new Stage();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/signUp.fxml"));
 		Parent root = null;
@@ -148,12 +313,11 @@ public class LoginController implements Initializable {
 			alert.setHeaderText(user.getName() + "님 가입 성공!!");
 			alert.setContentText(user.getName() + "님 반갑습니다~");
 			alert.showAndWait();
-			
+
 			stage.close();
 		} else {
 			System.out.println("가입 에러");
 		}
-
 	}
 
 	// 로그인 버튼 핸들러 등록
