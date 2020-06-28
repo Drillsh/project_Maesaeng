@@ -15,8 +15,8 @@ import model.*;
 
 public class LoginController implements Initializable {
 
-	private final String ADMIN_ID = "admin";
-	private final String ADMIN_PW = "1234";
+	private final String ADMIN_ID = "1";
+	private final String ADMIN_PW = "1";
 
 	@FXML
 	private Button btnLogin; // 로그인 버튼
