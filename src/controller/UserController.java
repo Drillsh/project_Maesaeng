@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.*;
 import java.net.*;
 import java.time.*;
 import java.util.*;
@@ -86,16 +87,27 @@ public class UserController implements Initializable {
 	private Label lbLoginUser;
 	@FXML
 	private Label lbFinalDate;
-	
+	@FXML
+	private Label lbAlbum;
+	@FXML
+	private Label lbNotice;
+	@FXML
+	private ImageView imgLogout;
+	@FXML
+	private ImageView imgAlbum;
+	@FXML
+	private ImageView imgNotice;
+
 	public Stage userStage;
 	private ToggleGroup toggleGroup;
 	private boolean roomChoiceFlag = false;
+	private ImageView selectedImage = new ImageView();
 
 	public ObservableList<Schedule> sObsList = FXCollections.observableArrayList();
-	public ObservableList<Integer> cmbObsList = FXCollections.observableArrayList();
+	private ObservableList<Integer> cmbObsList = FXCollections.observableArrayList();
+	private ObservableList<Album> albumObsList = FXCollections.observableArrayList();
 
 	public RoomDAO roomDAO = new RoomDAO();
-
 	private Schedule schedule = new Schedule();
 	private Room room = new Room();
 
@@ -104,6 +116,7 @@ public class UserController implements Initializable {
 
 		// 로그인한 유저 아이디 띄우기
 		lbLoginUser.setText(LoginController.user.getName() + " 님 [ " + LoginController.user.getUserid() + " ]");
+		// 스케줄에 로그인유저 정보전달
 		schedule.setUserID(LoginController.user.getUserid());
 
 		// 버튼 그룹 초기화
@@ -117,6 +130,14 @@ public class UserController implements Initializable {
 
 		// 중복 예약 방지
 		blockOverlapReservation();
+
+		// 앨범 이벤트
+		lbAlbum.setOnMouseClicked(event -> handleAlbumAction(event));
+		imgAlbum.setOnMouseClicked(event -> handleAlbumAction(event));
+
+		// 공지사항 이벤트
+		lbNotice.setOnMouseClicked(event -> handleNoticeAction(event));
+		imgNotice.setOnMouseClicked(event -> handleNoticeAction(event));
 
 		// 토글 버튼 이벤트
 		toggleGroup.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue,
@@ -150,8 +171,118 @@ public class UserController implements Initializable {
 		// 예약하기 버튼 이벤트
 		btnFinalRev.setOnAction(event -> handleBtnFinalRevAction(event));
 
-		// [Scene전환] User -> Login // 로그아웃 라벨 핸들러 등록
+		// [Scene전환] User -> Login // 로그아웃 핸들러 등록
 		lbLogout.setOnMouseClicked(event -> handleLogoutAction(event));
+		imgLogout.setOnMouseClicked(event -> handleLogoutAction(event));
+	}
+
+	// 앨범 이벤트
+	private void handleAlbumAction(MouseEvent event) {
+		
+		ObservableList<ImageView> albumList = FXCollections.observableArrayList();
+
+		if (albumObsList != null)
+			albumObsList.clear();
+
+		getTotalAlbumList();
+
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("/view/albumForUser.fxml"));
+			Scene scene = new Scene(root);
+			Stage albumStage = new Stage(StageStyle.UTILITY);
+			
+			albumStage.initOwner(userStage);
+			albumStage.setScene(scene);
+			albumStage.setResizable(false);
+			albumStage.setTitle("사진앨범");
+			albumStage.show();
+
+			ImageView image1 = (ImageView) scene.lookup("#image1");
+			ImageView image2 = (ImageView) scene.lookup("#image2");
+			ImageView image3 = (ImageView) scene.lookup("#image3");
+			ImageView image4 = (ImageView) scene.lookup("#image4");
+			ImageView image5 = (ImageView) scene.lookup("#image5");
+			ImageView image6 = (ImageView) scene.lookup("#image6");
+			ImageView image7 = (ImageView) scene.lookup("#image7");
+			ImageView image8 = (ImageView) scene.lookup("#image8");
+			ImageView image9 = (ImageView) scene.lookup("#image9");
+			Button btnChangePhoto = (Button) scene.lookup("#btnChangePhoto");
+			Button btnremove = (Button) scene.lookup("#btnremove");
+
+			albumList.add(image1);
+			albumList.add(image2);
+			albumList.add(image3);
+			albumList.add(image4);
+			albumList.add(image5);
+			albumList.add(image6);
+			albumList.add(image7);
+			albumList.add(image8);
+			albumList.add(image9);
+
+			// DB 에서 사진을 싹 긁어와서 띄움
+			albumInitialize(albumList);
+
+			// 클릭을 인식하는 이미지뷰 이벤트핸들러
+			image1.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image2.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image3.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image4.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image5.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image6.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image7.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image8.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			image9.setOnMouseClicked(e -> handleImage1ClickAction(e));
+			
+		}catch(Exception e) {
+			
+		}
+	}
+
+	// 공지사항 이벤트
+	private void handleNoticeAction(MouseEvent event) {
+		Parent root = null;
+		Stage albumstage = new Stage(StageStyle.UTILITY);
+		ObservableList<Notice> noticeObsList = FXCollections.observableArrayList();
+
+		try {
+			root = FXMLLoader.load(getClass().getResource("/view/noticeForUser.fxml"));
+			Scene scene = new Scene(root);
+
+			TableView tlvNotice = (TableView) scene.lookup("#tlvNotice");
+
+			TableColumn colNo = new TableColumn("번호");
+			colNo.setCellValueFactory(new PropertyValueFactory("noticeNo"));
+
+			TableColumn colTitle = new TableColumn("제목");
+			colTitle.setPrefWidth(200);
+			colTitle.setCellValueFactory(new PropertyValueFactory("title"));
+			
+			TableColumn colDate = new TableColumn("등록 날짜");
+			colDate.setCellValueFactory(new PropertyValueFactory("noticeDate"));
+
+			tlvNotice.getColumns().addAll(colNo, colTitle, colDate);
+
+			
+			NoticeDAO noticeDAO = new NoticeDAO();
+			ArrayList<Notice> noticeArrayList = noticeDAO.getNoticeLoadTotalList();
+			
+			for (int i = 0; i < noticeArrayList.size(); i++) {
+				Notice n = noticeArrayList.get(i);
+				noticeObsList.add(n);
+			}
+
+			tlvNotice.setItems(noticeObsList);
+
+			albumstage.initOwner(userStage);
+			albumstage.setScene(scene);
+			albumstage.setResizable(false);
+			albumstage.setTitle("공지사항");
+			albumstage.show();
+
+		} catch (IOException e1) {
+
+		}
 	}
 
 	// 룸선택 이동 플래그
@@ -181,16 +312,16 @@ public class UserController implements Initializable {
 	// 예약하기 버튼 이벤트
 	private void handleBtnFinalRevAction(ActionEvent event) {
 		ScheduleDAO scheduleDAO = new ScheduleDAO();
-		
+
 		int returnValue = scheduleDAO.registerSchedule(schedule);
-		
-		if(returnValue != 0) {
+
+		if (returnValue != 0) {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("예약 정보");
 			alert.setHeaderText("예약 성공!!");
 			alert.setContentText("감사합니다");
 			alert.showAndWait();
-		}else {
+		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("예약 정보");
 			alert.setHeaderText("예약 실패!!");
@@ -296,7 +427,7 @@ public class UserController implements Initializable {
 
 	// 토글 버튼 이벤트
 	private void handleTogBtnEvent(ActionEvent event) {
-		
+
 		if (event.getTarget().equals(btnA)) {
 			// 이미지 세팅
 			imgPic.setImage(new Image("/images/clouds.jpg"));
@@ -431,16 +562,17 @@ public class UserController implements Initializable {
 	// 예약창 정보 세팅
 	private void setFinalrevInfo() {
 
-		//lbFinalUser.setText(LoginController.user.getName() + " 님 [ " + LoginController.user.getUserid() + " ]");
+		// lbFinalUser.setText(LoginController.user.getName() + " 님 [ " +
+		// LoginController.user.getUserid() + " ]");
 		lbFinalUser.setText(schedule.getUserID());
-		
+
 		lbFinalNum.setText(schedule.getPersonNum() + "명");
 		lbFinalRoom.setText(schedule.getRoomName());
 		lbFinalDate.setText(schedule.getScheduleDate().toString());
 		lbFinalStime.setText(schedule.getStartTime() + "시");
 		lbFinalEtime.setText(schedule.getEndTime() + "시");
 
-		int totalCharge = room.getPrice() * schedule.getPersonNum();
+		int totalCharge = room.getPrice() * schedule.getPersonNum() * (schedule.getEndTime() - schedule.getStartTime());
 
 		lbFinalCharge.setText(totalCharge + " 원");
 	}
@@ -468,5 +600,46 @@ public class UserController implements Initializable {
 
 		} catch (Exception e) {
 		}
+	}
+
+	// 사진 초기화
+	private void albumInitialize(ObservableList<ImageView> albumList) {
+		Image localImage = null;
+
+		for (int i = 0; i < albumObsList.size() - 1; i++) {
+			String localUrl = albumObsList.get(i).getPhoto();
+
+			if (albumObsList.get(i).getPhoto() == null) {
+				localImage = new Image(albumObsList.get(10).getPhoto(), false);
+				albumList.get(i).setImage(localImage);
+			} else {
+				localImage = new Image(localUrl, false);
+				albumList.get(i).setImage(localImage);
+			}
+		}
+
+	}
+
+	// DB연동 핸들러
+	public void getTotalAlbumList() {
+		// 앨범 객체 가져옴
+
+		AlbumDAO albumDAO = new AlbumDAO();
+
+		ArrayList<Album> arrayList = albumDAO.AlbumTotal();
+
+		if (arrayList == null) {
+			return;
+		}
+
+		for (int i = 0; i < arrayList.size(); i++) {
+			Album album = arrayList.get(i);
+			albumObsList.add(album);
+		}
+	}
+
+	// 선택된 사진 초기화
+	private void handleImage1ClickAction(MouseEvent e) {
+		selectedImage = (ImageView) e.getTarget();
 	}
 }

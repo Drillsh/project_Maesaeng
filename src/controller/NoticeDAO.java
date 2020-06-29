@@ -1,11 +1,11 @@
 package controller;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.sql.Date;
+import java.util.*;
 
-import javafx.collections.*;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.*;
 import model.*;
 
 public class NoticeDAO {
@@ -52,6 +52,8 @@ public class NoticeDAO {
 		return noticeList;
 	}
 
+	
+	
 	// 테이블뷰에 저장된값을 DB에 저장
 	public int NoticeUpdate(Notice notice, int no) {
 		Connection con = null;

@@ -74,9 +74,9 @@ public class LoginController implements Initializable {
 
 		// 비밀번호 찾기 확인버튼 이벤트 등록
 		btnOkay.setOnAction(e -> handleBtnOkayAction1(txfName, txfId, txfPhone));
-		btnCancel.setOnAction(e->findPwStage.close());
-}		
-	
+		btnCancel.setOnAction(e -> findPwStage.close());
+	}
+
 	// 비밀번호 찾기 확인버튼 이벤트 등록++++++++++++
 	private void handleBtnOkayAction1(TextField txfName, TextField txfId, TextField txfPhone) {
 		UserDAO userDAO = new UserDAO();
@@ -86,7 +86,7 @@ public class LoginController implements Initializable {
 		String id = txfId.getText().trim();
 		String phone = txfPhone.getText().trim();
 
-		//필드에 아무값도 입력되지 않을때
+		// 필드에 아무값도 입력되지 않을때
 		if (name.equals("")) {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("비밀번호 찾기");
@@ -94,38 +94,38 @@ public class LoginController implements Initializable {
 			alert.showAndWait();
 			return;
 		}
-		
-		//리스트에서 이름을 검색해 리스트에 저장한다
+
+		// 리스트에서 이름을 검색해 리스트에 저장한다
 		arrayList = userDAO.getUserSearch(name);
-		
-		//빈 공간이 아닐경우
+
+		// 빈 공간이 아닐경우
 		if (!arrayList.isEmpty()) {
-			
-			String foundPw = findPw(arrayList,id,phone);
-			//foundPw가 null이 아닐 경우를 출력한다
-			if(foundPw != null) {
+
+			String foundPw = findPw(arrayList, id, phone);
+			// foundPw가 null이 아닐 경우를 출력한다
+			if (foundPw != null) {
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("비밀번호 찾기");
-				alert.setHeaderText("회원님의 비밀번호는 "+ foundPw +"입니다");
+				alert.setHeaderText("회원님의 비밀번호는 " + foundPw + "입니다");
 				alert.showAndWait();
 			} else {
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("비밀번호 찾기");
 				alert.setHeaderText("일치하는 회원정보가 없습니다");
 				alert.showAndWait();
-			}//end of if if
-		}//end of if 
+			} // end of if if
+		} // end of if
 	}
-	
-	//db의 정보와 입력값을 비교하는 함수
-	public String findPw(ArrayList<User> arrayList , String id , String phone) {
+
+	// db의 정보와 입력값을 비교하는 함수
+	public String findPw(ArrayList<User> arrayList, String id, String phone) {
 		for (User user : arrayList) {
-			if(user.getPhone().equals(phone) && user.getUserid().equals(id)) {
+			if (user.getPhone().equals(phone) && user.getUserid().equals(id)) {
 				return user.getPassword();
 			}
-		}//end of for
+		} // end of for
 		return null;
-	}//end of findPw
+	}// end of findPw
 
 	// 아이디 찾기 이벤트 등록//
 	private void handleFindIdAction(MouseEvent event) {
@@ -151,8 +151,8 @@ public class LoginController implements Initializable {
 
 		// 찾기 버튼 이벤트 등록
 		btnOkay.setOnAction(e -> handleBtnOkayAction(txfName, txfPhone));
-		btnCancel.setOnAction(e->findIdStage.close());
-		
+		btnCancel.setOnAction(e -> findIdStage.close());
+
 	}
 
 	// 아이이 찾기 확인버튼 이벤트 등록==========/
@@ -169,42 +169,42 @@ public class LoginController implements Initializable {
 			alert.setHeaderText("이름을 입력하세요");
 			alert.showAndWait();
 			return;
-		}// end of if
-		 		
+		} // end of if
+
 		arrayList = userDAO.getUserSearch(name);
 
-		if(!arrayList.isEmpty()) {
-			
+		if (!arrayList.isEmpty()) {
+
 			String foundId = findId(arrayList, phone);
-			
-			if( foundId != null) {
+
+			if (foundId != null) {
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("아이디 찾기");
-				alert.setHeaderText("회원님의 아이디는 "+ foundId  +" 입니다");
+				alert.setHeaderText("회원님의 아이디는 " + foundId + " 입니다");
 				alert.showAndWait();
-			}else {
+			} else {
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("아이디 찾기");
 				alert.setHeaderText("일치하는 정보의 회원이 없습니다");
 				alert.showAndWait();
 			}
-			
+
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("아이디 찾기");
 			alert.setHeaderText("정보를 확인하세요");
 			alert.showAndWait();
 		}
-		//arrayList = userDAO.getUserSearch(phone);
+		// arrayList = userDAO.getUserSearch(phone);
 	}
-	
-	//db의 정보와 입력값을 비교하는 함수
+
+	// db의 정보와 입력값을 비교하는 함수
 	private String findId(ArrayList<User> arrayList, String phone) {
-		
-		for(User user : arrayList) {
-			
-			if(user.getPhone().equals(phone)) {
-				
+
+		for (User user : arrayList) {
+
+			if (user.getPhone().equals(phone)) {
+
 				return user.getUserid();
 			}
 		}
@@ -364,7 +364,7 @@ public class LoginController implements Initializable {
 					DBUtil.userCon.userStage = userStage;
 					Scene scene = new Scene(root);
 
-					// scene.getStylesheets().add(getClass().getResource("../application/stu.css").toString());
+					// scene.getStylesheets().add(getClass().getResource("/application/user.css").toString());
 					// //css
 
 					userStage.setScene(scene);
