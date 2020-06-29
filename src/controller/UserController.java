@@ -178,7 +178,7 @@ public class UserController implements Initializable {
 
 	// 앨범 이벤트
 	private void handleAlbumAction(MouseEvent event) {
-		
+
 		ObservableList<ImageView> albumList = FXCollections.observableArrayList();
 
 		if (albumObsList != null)
@@ -191,13 +191,13 @@ public class UserController implements Initializable {
 			root = FXMLLoader.load(getClass().getResource("/view/albumForUser.fxml"));
 			Scene scene = new Scene(root);
 			Stage albumStage = new Stage(StageStyle.UTILITY);
-			
+
 			albumStage.initOwner(userStage);
 			albumStage.setScene(scene);
 			albumStage.setResizable(false);
 			albumStage.setTitle("사진앨범");
 			albumStage.show();
-
+			
 			ImageView image1 = (ImageView) scene.lookup("#image1");
 			ImageView image2 = (ImageView) scene.lookup("#image2");
 			ImageView image3 = (ImageView) scene.lookup("#image3");
@@ -233,9 +233,10 @@ public class UserController implements Initializable {
 			image7.setOnMouseClicked(e -> handleImage1ClickAction(e));
 			image8.setOnMouseClicked(e -> handleImage1ClickAction(e));
 			image9.setOnMouseClicked(e -> handleImage1ClickAction(e));
-			
-		}catch(Exception e) {
-			
+
+
+		} catch (Exception e) {
+
 		}
 	}
 
@@ -257,16 +258,15 @@ public class UserController implements Initializable {
 			TableColumn colTitle = new TableColumn("제목");
 			colTitle.setPrefWidth(200);
 			colTitle.setCellValueFactory(new PropertyValueFactory("title"));
-			
+
 			TableColumn colDate = new TableColumn("등록 날짜");
 			colDate.setCellValueFactory(new PropertyValueFactory("noticeDate"));
 
 			tlvNotice.getColumns().addAll(colNo, colTitle, colDate);
 
-			
 			NoticeDAO noticeDAO = new NoticeDAO();
 			ArrayList<Notice> noticeArrayList = noticeDAO.getNoticeLoadTotalList();
-			
+
 			for (int i = 0; i < noticeArrayList.size(); i++) {
 				Notice n = noticeArrayList.get(i);
 				noticeObsList.add(n);
@@ -641,5 +641,33 @@ public class UserController implements Initializable {
 	// 선택된 사진 초기화
 	private void handleImage1ClickAction(MouseEvent e) {
 		selectedImage = (ImageView) e.getTarget();
+
+		try {
+			if (e.getClickCount() != 2) {
+				return;
+			}
+			Parent viewRoot = FXMLLoader.load(getClass().getResource("/view/album_popup.fxml"));
+			Stage stage = new Stage(StageStyle.UTILITY);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setTitle("사진보기");
+
+			ImageView imageView = (ImageView) viewRoot.lookup("#imageView");
+			Button btnExit = (Button) viewRoot.lookup("#btnExit");
+			
+			Image selectedAlbum = selectedImage.getImage();
+			imageView.setImage(selectedAlbum);
+			
+			
+			Scene scene = new Scene(viewRoot);
+			stage.setScene(scene);
+			stage.show();
+			
+			btnExit.setOnAction(event -> stage.close() );
+			
+		} catch (IOException except) {
+			except.printStackTrace();
+		}
+
 	}
+
 }

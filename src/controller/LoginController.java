@@ -249,6 +249,8 @@ public class LoginController implements Initializable {
 
 		// 회원가입 버튼 이벤트
 		btnReco.setOnAction(e -> handleBtnRecoAction(txfId, pxtPw, txfName, txfPhone, txfEmail, memberStage));
+
+		btnEnd.setOnAction(e -> memberStage.close());
 	}
 
 	// 아이디 중복 체크 in 회원 가입창
@@ -337,8 +339,7 @@ public class LoginController implements Initializable {
 					managerController.managerStage = managerStage;
 					Scene scene = new Scene(root);
 
-					// scene.getStylesheets().add(getClass().getResource("../application/stu.css").toString());
-					// //css
+					scene.getStylesheets().add(getClass().getResource("/application/manager.css").toString());
 
 					managerStage.setScene(scene);
 
@@ -364,8 +365,7 @@ public class LoginController implements Initializable {
 					DBUtil.userCon.userStage = userStage;
 					Scene scene = new Scene(root);
 
-					// scene.getStylesheets().add(getClass().getResource("/application/user.css").toString());
-					// //css
+					scene.getStylesheets().add(getClass().getResource("/application/user.css").toString());
 
 					userStage.setScene(scene);
 

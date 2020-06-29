@@ -10,19 +10,45 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ManagerController">
    <children>
-      <Button fx:id="btnEdit" layoutX="627.0" layoutY="218.0" mnemonicParsing="false" text="회원수정" />
-      <Button fx:id="btnNotice" layoutX="627.0" layoutY="61.0" mnemonicParsing="false" text="공지사항" />
-      <Button fx:id="btnAlbum" layoutX="341.0" layoutY="218.0" mnemonicParsing="false" text="앨범관리" />
-      <Button fx:id="btnManagement" layoutX="341.0" layoutY="61.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="80.0" text="예약관리" />
-      <Label fx:id="lbId" layoutX="577.0" layoutY="23.0" text="admin" underline="true" />
-      <Label fx:id="lbLogout" layoutX="713.0" layoutY="23.0" text="로그아웃" underline="true" />
+      <Button fx:id="btnEdit" layoutX="607.0" layoutY="216.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="146.0" text="회원수정">
+         <graphic>
+            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/customer.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="btnNotice" layoutX="419.0" layoutY="216.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="146.0" text="공지사항">
+         <graphic>
+            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/attention.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="btnAlbum" layoutX="236.0" layoutY="216.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="146.0" text="앨범관리">
+         <graphic>
+            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/album_Manager.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="btnManagement" layoutX="43.0" layoutY="216.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="146.0" text="예약관리">
+         <graphic>
+            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/calendar.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Label fx:id="lbId" layoutX="236.0" layoutY="84.0" prefHeight="60.0" prefWidth="156.0" text="Admin.">
+         <font>
+            <Font size="41.0" />
+         </font></Label>
+      <Label fx:id="lbLogout" layoutX="683.0" layoutY="128.0" text="로그아웃" underline="true" />
       <Label layoutX="74.0" layoutY="52.0" />
-      <ImageView fitHeight="220.0" fitWidth="200.0" layoutX="62.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../images/image9.jpg" />
-         </image>
-      </ImageView>
-      <BarChart fx:id="barChart" layoutX="146.0" layoutY="372.0" prefHeight="400.0" prefWidth="621.0">
+      <BarChart fx:id="barChart" layoutX="146.0" layoutY="372.0" prefHeight="365.0" prefWidth="546.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -31,5 +57,10 @@
         </yAxis>
       </BarChart>
       <Label layoutX="43.0" layoutY="363.0" text="월 매출액" />
+      <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="679.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/exit_manager.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
