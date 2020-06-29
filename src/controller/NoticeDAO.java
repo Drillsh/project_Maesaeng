@@ -146,7 +146,7 @@ public class NoticeDAO {
 		}
 	}
 
-	// 테이블뷰에 저장된 테이블을 클릭해서 선택액션하는 이벤트
+	// 테이블뷰에 저장된 테이블을 클릭해서 삭제하는 이벤트
 	public int getNoticeDelete(Notice notice) {
 		Connection con = null;
 		PreparedStatement pstmt = null;

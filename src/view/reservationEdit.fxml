@@ -5,24 +5,23 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="640.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="640.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="22.0" layoutY="44.0" text="유저 이름:" />
-      <Label layoutX="8.0" layoutY="120.0" text="유저 아이디:" />
-      <Label layoutX="28.0" layoutY="193.0" text="방 이름:" />
-      <Label layoutX="33.0" layoutY="265.0" text="날 짜:" />
-      <Label layoutX="18.0" layoutY="337.0" text="시작시간 :" />
-      <Label layoutX="20.0" layoutY="402.0" text="종료시간:" />
-      <Label layoutX="28.0" layoutY="470.0" text="인원수:" />
-      <Label layoutX="9.0" layoutY="542.0" text="핸드폰 번호:" />
-      <TextField id="txfJname" layoutX="97.0" layoutY="39.0" />
-      <TextField id="txfUserID" layoutX="97.0" layoutY="115.0" />
-      <TextField id="txfRoomName" layoutX="97.0" layoutY="188.0" />
-      <TextField id="txfDate" layoutX="97.0" layoutY="260.0" />
-      <TextField id="txfStartTime" layoutX="97.0" layoutY="332.0" />
-      <TextField id="txfEndTime" layoutX="97.0" layoutY="397.0" />
-      <TextField id="txfPersonNum" layoutX="97.0" layoutY="465.0" />
-      <TextField id="txfPhone" layoutX="97.0" layoutY="537.0" />
-      <Button id="btnRevSave" layoutX="133.0" layoutY="590.0" mnemonicParsing="false" text="저장" />
+      <Label layoutX="62.0" layoutY="44.0" text="유저 이름:" />
+      <Label layoutX="48.0" layoutY="120.0" text="유저 아이디:" />
+      <Label layoutX="68.0" layoutY="193.0" text="방 이름:" />
+      <Label layoutX="73.0" layoutY="265.0" text="날 짜:" />
+      <Label layoutX="58.0" layoutY="337.0" text="시작시간 :" />
+      <Label layoutX="60.0" layoutY="402.0" text="종료시간:" />
+      <Label layoutX="68.0" layoutY="470.0" text="인원수:" />
+      <TextField id="txfJname" editable="false" layoutX="137.0" layoutY="39.0" />
+      <TextField id="txfUserID" editable="false" layoutX="137.0" layoutY="115.0" />
+      <TextField id="txfRoomName" layoutX="137.0" layoutY="188.0" />
+      <TextField id="txfDate" editable="false" layoutX="137.0" layoutY="260.0" />
+      <TextField id="txfStartTime" layoutX="137.0" layoutY="332.0" />
+      <TextField id="txfEndTime" layoutX="137.0" layoutY="397.0" />
+      <TextField id="txfPersonNum" layoutX="137.0" layoutY="465.0" />
+      <Button id="btnRevSave" layoutX="93.0" layoutY="550.0" mnemonicParsing="false" text="저 장" />
+      <Button id="btnRevCancel" layoutX="223.0" layoutY="550.0" mnemonicParsing="false" text="취 소" />
    </children>
 </AnchorPane>

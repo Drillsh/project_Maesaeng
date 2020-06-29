@@ -1,6 +1,58 @@
 .root{
-    -fx-background-image: url("/images/background.png");
-    -fx-background-repeat: stretch;   
-    -fx-background-size: 1200 800;
-    -fx-background-position: center center;
+	-fx-background-image: url("/images/background.png");
+}
+
+.finalRevFont{
+	-fx-font-size: 20;
+	-fx-font-family: "NanumSquare Bold";
+	-fx-font-weight: bold;
+}
+
+
+.tab, .tab-label{
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+   
+}
+
+.tab{
+    -fx-background-color: transparent;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 0.0;
+    -fx-padding: 5.0 30.0 5.0 30.0;
+    -fx-border-width: 0.0 1.0 0.0 1.0 ;
+    -fx-border-color: lightgrey;
+    -fx-border-radius: 10.0px;
+}
+
+.tab:selected {
+    -fx-background-color: #FAFCFB;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 0.0;
+    -fx-border-width: 3.0 3.0 3.0 3.0;
+    -fx-border-color: rgba(0, 0, 0, 0.7);
+    -fx-border-radius: 10.0px;
+}
+
+.tab:focused {
+    -fx-focus-color : transparent;
+}
+
+.tab-pane *.tab-header-background {
+    -fx-background-color: transparent;
+    -fx-opacity: 0.5;
+}
+
+.tab-pane:left *.tab-header-area {
+    -fx-background-insets: 0.0, 0.0 0.0 10.0;
+    -fx-padding: 0.0em 0.0em 0.0em 0.0em;
+}
+
+.tab:selected .focus-indicator {
+    -fx-focus-color:transparent;
+    -fx-border-color: transparent;
+}
+
+.transparentAnchorPane {
+    -fx-background-color: rgba(255.0, 255.0, 255.0, 0.7);
 }

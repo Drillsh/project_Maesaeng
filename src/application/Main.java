@@ -21,7 +21,7 @@ public class Main extends Application{
 		loginController.primaryStage = primaryStage;
 		Scene scene = new Scene(root);
 	
-		//scene.getStylesheets().add(getClass().getResource("login.css").toString());	// css
+		scene.getStylesheets().add(getClass().getResource("/application/login.css").toString());
 		
 		primaryStage.setTitle("LOGIN");
 		primaryStage.setScene(scene);
