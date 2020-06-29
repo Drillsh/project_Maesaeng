@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
@@ -12,13 +15,13 @@
       <Label layoutX="235.0" layoutY="70.0" text="홈" />
       <Label layoutX="317.0" layoutY="70.0" text="앨범" />
       <Label layoutX="402.0" layoutY="70.0" text="공지사항" />
-      <Label layoutX="979.0" layoutY="70.0" text="이름" />
+      <Label fx:id="lbLoginUser" layoutX="949.0" layoutY="67.0" text="이름" />
       <Label fx:id="lbLogout" layoutX="1088.0" layoutY="70.0" text="로그아웃" />
       <Label layoutX="45.0" layoutY="24.0" prefHeight="74.0" prefWidth="78.0" text="로고" />
       <Separator layoutX="33.0" layoutY="129.0" prefHeight="6.0" prefWidth="1115.0" />
       <TabPane fx:id="tbpTab" layoutX="45.0" layoutY="186.0" prefHeight="593.0" prefWidth="1115.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="스터디룸">
+          <Tab text="1. 스터디룸">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="395.0" prefWidth="878.0">
                      <children>
@@ -27,7 +30,10 @@
                            <children>
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="250.0" spacing="20.0">
                                  <children>
-                                    <ToggleButton fx:id="btnA" mnemonicParsing="false" prefWidth="130.0" text="A" />
+                                    <ToggleButton fx:id="btnA" mnemonicParsing="false" prefWidth="130.0" text="A">
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets></ToggleButton>
                                     <ToggleButton fx:id="btnB" mnemonicParsing="false" prefWidth="130.0" text="B" />
                                     <ToggleButton fx:id="btnC" mnemonicParsing="false" prefWidth="130.0" text="C" />
                                  </children>
@@ -61,12 +67,12 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <Button fx:id="btnNext1" layoutX="1016.0" layoutY="501.0" mnemonicParsing="false" text="선택 완료" />
+                        <Button fx:id="btnNext1" layoutX="976.0" layoutY="501.0" mnemonicParsing="false" text="선택 완료 &gt;&gt;" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab id="tabSchedule" text="일 정 ">
+          <Tab id="tabSchedule" fx:id="tabSchedule" disable="true" text="2. 일 정 ">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -76,7 +82,7 @@
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
                                  <children>
                                     <Label text="인원수" />
-                                    <Slider fx:id="sdrPersonNum" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" prefHeight="42.0" prefWidth="382.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                                    <Slider fx:id="sdrPersonNum" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" prefHeight="42.0" prefWidth="382.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
@@ -96,27 +102,29 @@
                            </children>
                         </VBox>
                         <Pane fx:id="calendarPane" layoutX="14.0" layoutY="14.0" prefHeight="469.0" prefWidth="556.0" />
-                        <Button fx:id="btnNext2" layoutX="1015.0" layoutY="516.0" mnemonicParsing="false" text="선택 완료" />
+                        <Button fx:id="btnNext2" layoutX="985.0" layoutY="506.0" mnemonicParsing="false" text="선택 완료 &gt;&gt;" />
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab id="tabCheck" text="예 약">
+            <Tab id="tabCheck" fx:id="tabReservation" disable="true" text="3. 예 약">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Label layoutX="83.0" layoutY="82.0" text="예약자: " />
-                        <Label layoutX="80.0" layoutY="125.0" text="총 인원: " />
-                        <Label layoutX="116.0" layoutY="168.0" text="룸:" />
-                        <Label layoutX="69.0" layoutY="206.0" text="사용 시간: " />
-                        <Label fx:id="lbFinalStime" layoutX="159.0" layoutY="206.0" text="Label" />
-                        <Label layoutX="216.0" layoutY="206.0" text="~" />
-                        <Label fx:id="lbFinalEtime" layoutX="246.0" layoutY="206.0" text="Label" />
+                        <Label layoutX="80.0" layoutY="135.0" text="총 인원: " />
+                        <Label layoutX="116.0" layoutY="178.0" text="룸:" />
+                        <Label layoutX="69.0" layoutY="266.0" text="사용 시간: " />
+                        <Label fx:id="lbFinalStime" layoutX="159.0" layoutY="266.0" text="Label" />
+                        <Label layoutX="216.0" layoutY="266.0" text="~" />
+                        <Label fx:id="lbFinalEtime" layoutX="246.0" layoutY="266.0" text="Label" />
                         <Label fx:id="lbFinalUser" layoutX="159.0" layoutY="82.0" text="Label" />
-                        <Label fx:id="lbFinalNum" layoutX="159.0" layoutY="125.0" text="Label" />
-                        <Label fx:id="lbFinalRoom" layoutX="159.0" layoutY="168.0" text="Label" />
-                        <Label layoutX="91.0" layoutY="268.0" text="요 금: " />
-                        <Label fx:id="lbFinalCharge" layoutX="159.0" layoutY="268.0" text="Label" />
-                        <Button fx:id="btnFinalRev" layoutX="414.0" layoutY="263.0" mnemonicParsing="false" text="예약 하기" />
+                        <Label fx:id="lbFinalNum" layoutX="159.0" layoutY="135.0" text="Label" />
+                        <Label fx:id="lbFinalRoom" layoutX="159.0" layoutY="178.0" text="Label" />
+                        <Label layoutX="96.0" layoutY="315.0" text="요 금: " />
+                        <Label fx:id="lbFinalCharge" layoutX="164.0" layoutY="315.0" text="Label" />
+                        <Button fx:id="btnFinalRev" layoutX="438.0" layoutY="305.0" mnemonicParsing="false" text="예약 하기" />
+                        <Label layoutX="66.0" layoutY="221.0" text="예약 날짜:" />
+                        <Label fx:id="lbFinalDate" layoutX="159.0" layoutY="219.0" text="Label" />
                      </children></AnchorPane>
                </content>
             </Tab>

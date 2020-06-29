@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="450.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <children>
+      <Label layoutX="157.0" layoutY="34.0" text="비밀번호 찾기">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="89.0" layoutY="160.0" text="아이디" />
+      <Label layoutX="89.0" layoutY="99.0" text="이름" />
+      <TextField id="txfName" layoutX="188.0" layoutY="94.0" />
+      <TextField id="txfId" layoutX="188.0" layoutY="154.0" />
+      <Button id="btnOkay" layoutX="111.0" layoutY="271.0" mnemonicParsing="false" text="확인" />
+      <Button id="btnCancel" layoutX="307.0" layoutY="271.0" mnemonicParsing="false" text="취소" />
+      <Label layoutX="89.0" layoutY="215.0" text="핸드폰 번호" />
+      <TextField id="txfPhone" layoutX="188.0" layoutY="210.0" />
+      <HBox alignment="CENTER" layoutX="26.0" layoutY="325.0" prefHeight="110.0" prefWidth="449.0">
+         <children>
+            <Label id="lbMessage" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
