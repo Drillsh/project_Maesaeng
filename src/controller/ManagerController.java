@@ -49,12 +49,13 @@ public class ManagerController implements Initializable {
 	public Stage stage;
 	public Stage managerStage;
 	private int tableViewSelectedIndex;
+	private Stage reservationstage;
 	private ObservableList<User> obslist = FXCollections.observableArrayList();
 	private ObservableList<Album> albumObsList = FXCollections.observableArrayList();
 	private ObservableList<JoinRevList> obsjrlList = FXCollections.observableArrayList();
-	private Stage reservationstage;
 	private ObservableList<Notice> noticeObsList = FXCollections.observableArrayList();
 	private ArrayList<Notice> noticeArrayList = new ArrayList<>();
+	private ArrayList<JoinRevList> joinrevArrayList = new ArrayList<>();
 	private Stage editstage;
 	private Stage albumstage;
 	private Stage noticestage;
@@ -133,6 +134,7 @@ public class ManagerController implements Initializable {
 			btnNoticeDelete.setOnAction(event -> hanclebtnNoticeDeleteAction(event));
 			// 테이블뷰에 저장된 공지사항 수정버튼 이벤트등록
 			btnNoticeEdit.setOnAction(event -> handlebtnNoticeEditAction(event));
+
 			NoticeDAO noticeDAO = new NoticeDAO();
 			noticeArrayList = noticeDAO.getNoticeLoadTotalList();
 
@@ -254,7 +256,7 @@ public class ManagerController implements Initializable {
 			txtTitle.setText(txtTitle.getText());
 			txaContents.setText(txaContents.getText());
 
-			// 공지사항 제목 내용 저장버튼
+			// 공지사항 제목과내용 저장버튼
 			btnNoticeSave.setOnAction(e -> {
 				Notice notice = new Notice();
 
@@ -664,14 +666,14 @@ public class ManagerController implements Initializable {
 	// 예약관리이벤트 핸들러 및 팝업창 작업
 	private void handlebtnManagementAction(ActionEvent event) {
 		Parent root = null;
-
+		reservationstage = new Stage(StageStyle.UTILITY);
 		try {
 
 			root = FXMLLoader.load(getClass().getResource("/view/reservation.fxml"));
 			Scene scene = new Scene(root);
 
 			TableView tlvReservation = (TableView) scene.lookup("#tlvReservation");
-			JoinRevList jrl = obsjrlList.get(tableViewSelectedIndex);
+
 			TableColumn colname = new TableColumn("유저이름");
 			colname.setCellValueFactory(new PropertyValueFactory("jName"));
 
@@ -701,35 +703,116 @@ public class ManagerController implements Initializable {
 			tlvReservation.getColumns().addAll(colname, coluserid, colroomName, colscheduleDate, colstartTime,
 					colendTime, colpersonNum, colphone);
 
-			tlvReservation.setItems(obsjrlList);
 			tlvReservation.setOnMouseClicked(
 					e -> tableViewSelectedIndex = tlvReservation.getSelectionModel().getSelectedIndex());
+
 			TextField txfreservationSearch = (TextField) scene.lookup("#txfreservationSearch");
 			Button btnReservationEdit = (Button) scene.lookup("#btnReservationEdit");
 			Button btnReservationDelete = (Button) scene.lookup("#btnReservationDelete");
 			Button btnReservationSearch = (Button) scene.lookup("#btnReservationSearch");
-			
+
 			JoinRevListDAO joinrevlistDAO = new JoinRevListDAO();
-//			ArrayList<JoinRevList> jrlList = joinrevlistDAO.getJoinRevListTotalLoadList(jphone);
-//			
-//			if(jrlList==null) {
-//				return;
-//			}
-//			for(int i=0; i<jrlList.size(); i++) {
-//				JoinRevList joinrevList = jrlList.get(i);
-//				obsjrlList.add(joinrevList);
-//			}
-			
-			reservationstage = new Stage(StageStyle.UTILITY);
+			ArrayList<JoinRevList> joinrevArrayList = joinrevlistDAO.getJoinRevListTotalLoadList();
+
+			if (joinrevArrayList != null) {
+				obsjrlList.clear();
+			}
+			for (int i = 0; i < joinrevArrayList.size(); i++) {
+
+				JoinRevList j = joinrevArrayList.get(i);
+				obsjrlList.add(j);
+			}
+
+			tlvReservation.setItems(obsjrlList);
+
 			reservationstage.initModality(Modality.WINDOW_MODAL);
 			reservationstage.initOwner(stage);
 			reservationstage.setScene(scene);
 			reservationstage.setResizable(false);
 			reservationstage.show();
+			// 예약관리창 에 저장된 테이블뷰정보를 수정하는버튼 이벤트
+			btnReservationEdit.setOnAction(e -> handelbtnResercationEditAction(e));
+
 		} catch (IOException e) {
 
 		}
 
+	}
+
+	// 예약관리 테이블뷰에 저장된 데이터를 수정하는버튼 이벤트등록
+	private void handelbtnResercationEditAction(ActionEvent e) {
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("/view/reservationEdit.fxml"));
+			Scene scene = new Scene(root);
+
+			TextField txfJname = (TextField) scene.lookup("#txfJname");
+			TextField txfUserID = (TextField) scene.lookup("#txfUserID");
+			TextField txfRoomName = (TextField) scene.lookup("#txfRoomName");
+			TextField txfDate = (TextField) scene.lookup("#txfDate");
+			TextField txfStartTime = (TextField) scene.lookup("#txfStartTime");
+			TextField txfEndTime = (TextField) scene.lookup("#txfEndTime");
+			TextField txfPersonNum = (TextField) scene.lookup("#txfPersonNum");
+			TextField txfPhone = (TextField) scene.lookup("#txfPhone");
+			Button btnRevSave = (Button) scene.lookup("#btnRevSave");
+
+//			JoinRevList j = obsjrlList.get(tableViewSelectedIndex);
+
+			txfJname.setText(txfJname.getText());
+			txfUserID.setText(txfUserID.getText());
+			txfRoomName.setText(txfRoomName.getText());
+			txfDate.setUserData(txfDate.getLocalToParentTransform());
+			txfStartTime.setText(txfStartTime.getText());
+			txfEndTime.setText(txfEndTime.getText());
+			txfPersonNum.setText(txfPersonNum.getText());
+			txfPhone.setText(txfPhone.getText());
+			txfPersonNum.setText(txfPersonNum.getText());
+
+			btnRevSave.setOnAction(event -> {
+				JoinRevList JRL = new JoinRevList();
+
+				JRL.setjName(txfJname.getText());
+				JRL.setjUserID(txfUserID.getText());
+				JRL.setjRoomName(txfRoomName.getText());
+				JRL.setjStartTime(Integer.valueOf(txfStartTime.getText()));
+				JRL.setjEndTime(Integer.valueOf(txfEndTime.getText()));
+				JRL.setjPersonNum(Integer.valueOf(txfPersonNum.getText()));
+
+				int returnValue = 0;
+
+				JoinRevListDAO joinreclistDAO = new JoinRevListDAO();
+				returnValue = JoinRevListDAO.
+
+				if (returnValue != 0) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("공지사항 저장");
+					alert.setHeaderText("공지사항저장 성공");
+					alert.showAndWait();
+				} else {
+					System.out.println("연결실패");
+				}
+
+			});
+//			reservationstage.close();
+//			obsjrlList.clear();
+//			getNoticeLoadTotalList();
+
+			reservationstage.initModality(Modality.WINDOW_MODAL);
+			reservationstage.initOwner(stage);
+			reservationstage.setScene(scene);
+			reservationstage.setResizable(false);
+			reservationstage.show();
+
+			JoinRevListDAO joinreclistDAO = new JoinRevListDAO();
+			ArrayList<JoinRevList> jrlarraylist = new ArrayList<JoinRevList>();
+
+			for (int i = 0; i < jrlarraylist.size(); i++) {
+				JoinRevList r = jrlarraylist.get(i);
+				obsjrlList.add(r);
+			}
+		} catch (IOException e1) {
+
+		}
 	}
 
 }

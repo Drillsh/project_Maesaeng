@@ -19,7 +19,7 @@ public class JoinRevListDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		ArrayList<JoinRevList> jrllist = new ArrayList<JoinRevList>();
+		ArrayList<JoinRevList> joinrevArrayList = new ArrayList<>();
 
 		// mysql 드라이버 로더, 데이터베이스 객체를 가져온다
 		try {
@@ -39,7 +39,6 @@ public class JoinRevListDAO {
 
 			// query문을 실행하기 위한 준비.
 			pstmt = con.prepareStatement(query);
-			//pstmt.setString(8,jphone);
 
 			// 쿼리문을 실행한다
 			rs = pstmt.executeQuery();
@@ -48,13 +47,13 @@ public class JoinRevListDAO {
 				JoinRevList jrl = new JoinRevList(rs.getString(1), rs.getString(2), rs.getString(3),
 						rs.getDate(4).toLocalDate(), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getString(8));
 
-				jrllist.add(jrl);
+				joinrevArrayList.add(jrl);
 			}
 
 		} catch (Exception e) {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("점검요망");
-			alert.setHeaderText("룸 검색 문제발생! ");
+			alert.setHeaderText(" 문제발생! ");
 			alert.setContentText("원인: \n" + e.getMessage());
 			alert.showAndWait();
 
@@ -69,11 +68,68 @@ public class JoinRevListDAO {
 					con.close();
 
 			} catch (SQLException e) {
-				System.out.println("UserController.roomSearch: " + e.getMessage());
+				System.out.println("UserController.getJoinRevListTotalLoadList: " + e.getMessage());
 			}
 
-			return jrllist;
+			return joinrevArrayList;
 		}
 
 	}
+
+	// 예약관리 수정버튼정보 찾아 가져오기
+	public int getReservationUpdate(JoinRevList joinrevlist) {
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		int returnValue = 0;
+
+		try {
+			con = DBUtil.getConnection();
+			String query = "update noticetbl set  jname = ? , juserid= ?,jroonnum = ? , jstarttime = ?, jendtime = ? where jphone = ?";
+			pstmt = con.prepareStatement(query);
+
+			pstmt.setString(1, joinrevlist.getJName());
+			pstmt.setString(2, joinrevlist.getJUserID());
+			pstmt.setString(3, joinrevlist.getJRoomName());
+			pstmt.setInt(4, joinrevlist.getJStartTime());
+			pstmt.setInt(5, joinrevlist.getJEndTime());
+			pstmt.setInt(6, joinrevlist.getJPersonNum());
+			pstmt.setString(7, joinrevlist.getJPhone());
+
+			returnValue = pstmt.executeUpdate();
+
+			if (returnValue != 0) {
+
+			} else {
+				throw new Exception();
+			}
+			if (con != null) {
+				System.out.println("NoticeDAO.getReservationUpdate : DB 연결 성공");
+			} else {
+				System.out.println("NoticeDAO.getReservationUpdate : DB 연결 실패");
+			}
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("수정 성공");
+			alert.setHeaderText(joinrevlist + "번 수정 성공");
+			alert.setContentText(joinrevlist + "님 수정됐네요 ^^");
+			alert.showAndWait();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (con != null)
+					con.close();
+
+			} catch (SQLException e) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("공 지 사 항");
+				alert.setContentText("수정:" + e.getMessage());
+				alert.showAndWait();
+			}
+		}
+		return returnValue;
+
+	}
+
 }
