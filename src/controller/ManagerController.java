@@ -9,8 +9,7 @@ import javafx.collections.*;
 import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.*;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.*;
 import javafx.scene.control.cell.*;
@@ -730,10 +729,69 @@ public class ManagerController implements Initializable {
 			// 예약관리창 에 저장된 테이블뷰정보를 수정하는버튼 이벤트
 			btnReservationEdit.setOnAction(e -> handelbtnResercationEditAction(e));
 
+			// 예약관리창 -> 삭제 버튼 이벤트
+			btnReservationDelete.setOnAction(e -> handleBtnResevationDeleteAction(e));
+
+			// 예약 관리창 -> 검색 버튼 이벤트
+			btnReservationSearch.setOnAction(e -> handleBtnReservationSearchAction(txfreservationSearch));
+
 		} catch (IOException e) {
 
 		}
 
+	}
+
+	// 예약 관리창 -> 검색 버튼 이벤트
+	private void handleBtnReservationSearchAction(TextField txtSearch) {
+		try {
+			JoinRevListDAO joinRevListDAO = new JoinRevListDAO();
+			
+			ArrayList<JoinRevList> searchList = joinRevListDAO.getReservationSearch(txtSearch.getText().trim());
+			
+			if (txtSearch.getText().trim().equals("")) {
+				throw new Exception();
+			}
+			
+			if (searchList.size() != 0) {
+				obsjrlList.clear();
+				for (int i = 0; i < searchList.size(); i++) {
+					JoinRevList u = searchList.get(i);
+					obsjrlList.add(u);
+				}
+			}
+		} catch (Exception except) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("이름입력요망");
+			alert.setHeaderText("이름을 입력하세요");
+			alert.setContentText("주의하세요");
+			alert.showAndWait();
+		}
+	}
+
+	// 예약관리창 -> 삭제 버튼 이벤트
+	private void handleBtnResevationDeleteAction(ActionEvent e) {
+
+		JoinRevList joinRevList = obsjrlList.get(tableViewSelectedIndex);
+		String userID = joinRevList.getJUserID();
+
+		JoinRevListDAO joinRevListDAO = new JoinRevListDAO();
+
+		int returnValue = joinRevListDAO.getReservationDelete(userID);
+
+		if (returnValue != 0) {
+			obsjrlList.remove(tableViewSelectedIndex);
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("예약 삭제");
+			alert.setHeaderText(userID + "님 예약 삭제 성공");
+			alert.showAndWait();
+
+		} else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("예약 삭제 에러");
+			alert.setHeaderText("삭제 점검요망");
+			alert.setContentText("삭제주의하세요");
+			alert.showAndWait();
+		}
 	}
 
 	// 예약관리 테이블뷰에 저장된 데이터를 수정하는버튼 이벤트등록
@@ -766,28 +824,28 @@ public class ManagerController implements Initializable {
 			txfPersonNum.setText(txfPersonNum.getText());
 
 			btnRevSave.setOnAction(event -> {
-				JoinRevList JRL = new JoinRevList();
-
-				JRL.setjName(txfJname.getText());
-				JRL.setjUserID(txfUserID.getText());
-				JRL.setjRoomName(txfRoomName.getText());
-				JRL.setjStartTime(Integer.valueOf(txfStartTime.getText()));
-				JRL.setjEndTime(Integer.valueOf(txfEndTime.getText()));
-				JRL.setjPersonNum(Integer.valueOf(txfPersonNum.getText()));
-
-				int returnValue = 0;
-
-				JoinRevListDAO joinreclistDAO = new JoinRevListDAO();
-				returnValue = JoinRevListDAO.
-
-				if (returnValue != 0) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("공지사항 저장");
-					alert.setHeaderText("공지사항저장 성공");
-					alert.showAndWait();
-				} else {
-					System.out.println("연결실패");
-				}
+//				JoinRevList JRL = new JoinRevList();
+//
+//				JRL.setjName(txfJname.getText());
+//				JRL.setjUserID(txfUserID.getText());
+//				JRL.setjRoomName(txfRoomName.getText());
+//				JRL.setjStartTime(Integer.valueOf(txfStartTime.getText()));
+//				JRL.setjEndTime(Integer.valueOf(txfEndTime.getText()));
+//				JRL.setjPersonNum(Integer.valueOf(txfPersonNum.getText()));
+//
+//				int returnValue = 0;
+//
+//				JoinRevListDAO joinreclistDAO = new JoinRevListDAO();
+//				returnValue = JoinRevListDAO.
+//
+//				if (returnValue != 0) {
+//					Alert alert = new Alert(AlertType.ERROR);
+//					alert.setTitle("공지사항 저장");
+//					alert.setHeaderText("공지사항저장 성공");
+//					alert.showAndWait();
+//				} else {
+//					System.out.println("연결실패");
+//				}
 
 			});
 //			reservationstage.close();
