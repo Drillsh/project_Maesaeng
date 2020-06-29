@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -15,16 +16,20 @@
       <Button fx:id="btnManagement" layoutX="341.0" layoutY="61.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="80.0" text="예약관리" />
       <Label fx:id="lbId" layoutX="577.0" layoutY="23.0" text="admin" underline="true" />
       <Label fx:id="lbLogout" layoutX="713.0" layoutY="23.0" text="로그아웃" underline="true" />
-      <TextArea fx:id="txtMemo" layoutX="14.0" layoutY="372.0" prefHeight="408.0" prefWidth="251.0" />
-      <Label fx:id="lbMemo" layoutX="14.0" layoutY="332.0" text="인수인계메모" />
-      <Button fx:id="btnDelete" layoutX="154.0" layoutY="327.0" mnemonicParsing="false" text="삭 제" />
-      <TableView fx:id="tlvBlackList" layoutX="321.0" layoutY="371.0" prefHeight="408.0" prefWidth="452.0" />
-      <Label fx:id="lbList" layoutX="321.0" layoutY="331.0" text="블랙리스트" />
       <Label layoutX="74.0" layoutY="52.0" />
       <ImageView fitHeight="220.0" fitWidth="200.0" layoutX="62.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../images/image9.jpg" />
          </image>
       </ImageView>
+      <BarChart fx:id="barChart" layoutX="146.0" layoutY="372.0" prefHeight="400.0" prefWidth="621.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </BarChart>
+      <Label layoutX="43.0" layoutY="363.0" text="월 매출액" />
    </children>
 </AnchorPane>

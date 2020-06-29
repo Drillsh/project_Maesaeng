@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
-</AnchorPane>
 
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <children>
+      <TableView id="tlvReservation" layoutX="11.0" layoutY="170.0" prefHeight="520.0" prefWidth="977.0" />
+      <Button id="btnReservationEdit" layoutX="778.0" layoutY="127.0" mnemonicParsing="false" text="수정" />
+      <Button id="btnReservationDelete" layoutX="892.0" layoutY="127.0" mnemonicParsing="false" text="삭제" />
+      <Label layoutX="51.0" layoutY="132.0" text="예약관리" />
+      <Label layoutX="266.0" layoutY="132.0" text="검색:" />
+      <TextField id="txfreservationSearch" layoutX="306.0" layoutY="127.0" prefHeight="29.0" prefWidth="338.0" />
+      <Button id="btnReservationSearch" layoutX="653.0" layoutY="127.0" mnemonicParsing="false" text="검색" />
+   </children>
+</AnchorPane>
