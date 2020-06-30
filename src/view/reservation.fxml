@@ -12,7 +12,7 @@
       <Button id="btnReservationDelete" layoutX="892.0" layoutY="127.0" mnemonicParsing="false" text="삭제" />
       <Label layoutX="51.0" layoutY="132.0" text="예약관리" />
       <Label layoutX="266.0" layoutY="132.0" text="검색:" />
-      <TextField id="txfreservationSearch" layoutX="306.0" layoutY="127.0" prefHeight="29.0" prefWidth="338.0" />
+      <TextField id="txfreservationSearch" layoutX="306.0" layoutY="127.0" prefHeight="29.0" prefWidth="338.0" promptText="유저아이디를 입력하세요" />
       <Button id="btnReservationSearch" layoutX="653.0" layoutY="127.0" mnemonicParsing="false" text="검색" />
    </children>
 </AnchorPane>
