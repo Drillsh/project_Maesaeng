@@ -14,9 +14,9 @@
    <children>
      <Label fx:id="lbAlbum" layoutX="900.0" layoutY="140.0" text="앨범" />
       <Label fx:id="lbNotice" layoutX="992.0" layoutY="140.0" text="공지사항" />
-      <Label fx:id="lbLoginUser" layoutX="653.0" layoutY="140.0" text="이름">
+      <Label fx:id="lbLoginUser" layoutX="613.0" layoutY="127.0" text="이름">
          <font>
-            <Font name="NanumBarunpen" size="15.0" />
+            <Font size="22.0" />
          </font></Label>
       <Label fx:id="lbLogout" layoutX="1088.0" layoutY="140.0" text="로그아웃" />
       <TabPane fx:id="tbpTab" layoutX="43.0" layoutY="189.0" prefHeight="564.0" prefWidth="1115.0" tabClosingPolicy="UNAVAILABLE">
@@ -62,12 +62,12 @@
                                     <Label fx:id="lbPersonNum" text="ㅇㅇㅇ" />
                                     <Label fx:id="lbIsWB" text="ㅇㅇㅇ" />
                                     <Label fx:id="lbIsTV" text="ㅇㅇㅇ" />
-                                    <Label fx:id="lbCharge" text="ㅇㅇㅇㅇ" />
+                                    <Label fx:id="lbCharge" text="ㅇㅇㅇ" />
                                  </children>
                               </VBox>
                            </children>
                         </HBox>
-                        <Button fx:id="btnNext1" layoutX="975.0" layoutY="466.0" mnemonicParsing="false" text="선택 완료 &gt;&gt;">
+                        <Button fx:id="btnNext1" layoutX="989.0" layoutY="476.0" mnemonicParsing="false" text="선택 완료 &gt;&gt;">
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding></Button>
@@ -145,7 +145,7 @@
                                     <Label fx:id="lbFinalRoom" styleClass="finalRevFont" />
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="80.0">
                                  <children>
                                     <Label styleClass="finalRevFont" text="예약 날짜:" />
                                     <Label fx:id="lbFinalDate" styleClass="finalRevFont" />
@@ -154,7 +154,10 @@
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
                                  <children>
                                     <Label styleClass="finalRevFont" text="사용 시간: " />
-                                    <Label fx:id="lbFinalStime" styleClass="finalRevFont" />
+                                    <Label fx:id="lbFinalStime" styleClass="finalRevFont">
+                                       <padding>
+                                          <Insets left="15.0" />
+                                       </padding></Label>
                                     <Label styleClass="finalRevFont" text="~" />
                                     <Label fx:id="lbFinalEtime" styleClass="finalRevFont" />
                                  </children>
