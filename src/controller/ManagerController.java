@@ -77,24 +77,24 @@ public class ManagerController implements Initializable {
 
 		// 차트 초기화
 		chartInitialize();
-		
+
 	}
 
 	private void chartInitialize() {
-		
+
 		SalesDAO salesDAO = new SalesDAO();
-		
+
 		ArrayList<Sales> salesArrayList = salesDAO.getSalesLoadList();
 		ObservableList salesObsList = FXCollections.observableArrayList();
-		
+
 		XYChart.Series salesChart = new XYChart.Series();
 		salesChart.setName("월별 매출");
-		
+
 		for (int i = 0; i < salesArrayList.size(); i++) {
 			Sales s = salesArrayList.get(i);
-			salesObsList.add(new XYChart.Data(s.getMonth()+" 월", s.getSales()));
+			salesObsList.add(new XYChart.Data(s.getMonth() + " 월", s.getSales()));
 		}
-		
+
 		salesChart.setData(salesObsList);
 
 		barChart.getData().add(salesChart);
@@ -281,10 +281,10 @@ public class ManagerController implements Initializable {
 				} else {
 					System.out.println("연결실패");
 				}
+				noticestage.close();
+				noticeObsList.clear();
+				getNoticeLoadTotalList();
 			});
-			noticestage.close();
-			noticeObsList.clear();
-			getNoticeLoadTotalList();
 
 			noticestage = new Stage(StageStyle.UTILITY);
 			noticestage.initOwner(stage);
@@ -637,7 +637,6 @@ public class ManagerController implements Initializable {
 
 			btnSave.setOnAction(e -> {
 
-				// users.setUserid(String.valueOf(user.getUserid()));
 				user.setPassword(txtPassWord.getText());
 				user.setName(txtName.getText());
 				user.setMail(txtMail.getText());
@@ -650,12 +649,13 @@ public class ManagerController implements Initializable {
 				} else {
 					System.out.println("연결 실패");
 				}
+				
 			});
-			
+
 			btnExit.setOnAction(e -> {
 				editstage.close();
 			});
-			
+
 			editstage = new Stage(StageStyle.UTILITY);
 			editstage.initModality(Modality.WINDOW_MODAL);
 			editstage.initOwner(stage);
@@ -756,13 +756,13 @@ public class ManagerController implements Initializable {
 	private void handleBtnReservationSearchAction(TextField txtSearch) {
 		try {
 			JoinRevListDAO joinRevListDAO = new JoinRevListDAO();
-			
+
 			ArrayList<JoinRevList> searchList = joinRevListDAO.getReservationSearch(txtSearch.getText().trim());
-			
+
 			if (txtSearch.getText().trim().equals("")) {
 				throw new Exception();
 			}
-			
+
 			if (searchList.size() != 0) {
 				obsjrlList.clear();
 				for (int i = 0; i < searchList.size(); i++) {
@@ -826,10 +826,9 @@ public class ManagerController implements Initializable {
 			txfJname.setDisable(true);
 			txfUserID.setDisable(true);
 			txfDate.setDisable(true);
-			
-			
+
 			JoinRevList joinRevList = obsjrlList.get(tableViewSelectedIndex);
-			
+
 			txfJname.setText(joinRevList.getJName());
 			txfUserID.setText(joinRevList.getJUserID());
 			txfRoomName.setText(joinRevList.getJRoomName());
@@ -849,30 +848,30 @@ public class ManagerController implements Initializable {
 
 				JoinRevListDAO joinRevListDAO = new JoinRevListDAO();
 				returnValue = joinRevListDAO.getReservationUpdate(joinRevList);
-				
+
 				if (returnValue != 0) {
-					
+
 					obsjrlList.set(tableViewSelectedIndex, joinRevList);
-					
+
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("예약 수정");
-					alert.setHeaderText(joinRevList.getJName()+"님 예약 수정 성공!!");
+					alert.setHeaderText(joinRevList.getJName() + "님 예약 수정 성공!!");
 					alert.showAndWait();
 					reservationEditstage.close();
-					
+
 				} else {
 					System.out.println("예약 수정 실패");
 				}
 			});
-			
+
 			btnRevCancel.setOnAction(event -> reservationEditstage.close());
-			
+
 			reservationEditstage.initModality(Modality.WINDOW_MODAL);
 			reservationEditstage.initOwner(reservationstage);
 			reservationEditstage.setScene(scene);
 			reservationEditstage.setResizable(false);
 			reservationEditstage.show();
-			
+
 		} catch (IOException e1) {
 
 		}

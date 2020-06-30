@@ -197,7 +197,7 @@ public class UserController implements Initializable {
 			albumStage.setResizable(false);
 			albumStage.setTitle("»çÁø¾Ù¹ü");
 			albumStage.show();
-			
+
 			ImageView image1 = (ImageView) scene.lookup("#image1");
 			ImageView image2 = (ImageView) scene.lookup("#image2");
 			ImageView image3 = (ImageView) scene.lookup("#image3");
@@ -233,7 +233,6 @@ public class UserController implements Initializable {
 			image7.setOnMouseClicked(e -> handleImage1ClickAction(e));
 			image8.setOnMouseClicked(e -> handleImage1ClickAction(e));
 			image9.setOnMouseClicked(e -> handleImage1ClickAction(e));
-
 
 		} catch (Exception e) {
 
@@ -653,17 +652,16 @@ public class UserController implements Initializable {
 
 			ImageView imageView = (ImageView) viewRoot.lookup("#imageView");
 			Button btnExit = (Button) viewRoot.lookup("#btnExit");
-			
+
 			Image selectedAlbum = selectedImage.getImage();
 			imageView.setImage(selectedAlbum);
-			
-			
+
 			Scene scene = new Scene(viewRoot);
 			stage.setScene(scene);
 			stage.show();
-			
-			btnExit.setOnAction(event -> stage.close() );
-			
+
+			btnExit.setOnAction(event -> stage.close());
+
 		} catch (IOException except) {
 			except.printStackTrace();
 		}
