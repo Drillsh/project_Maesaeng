@@ -430,28 +430,28 @@ public class UserController implements Initializable {
 
 		if (event.getTarget().equals(btnA)) {
 			// 이미지 세팅
-			imgPic.setImage(new Image("/images/clouds.jpg"));
+			imgPic.setImage(new Image("/images/room.jpg"));
 			// 룸정보 가져오기
 			showInfo("A");
 		}
 		if (event.getTarget().equals(btnB)) {
-			imgPic.setImage(new Image("/images/horizon.jpg"));
+			imgPic.setImage(new Image("/images/room1.jpg"));
 			showInfo("B");
 		}
 		if (event.getTarget().equals(btnC)) {
-			imgPic.setImage(new Image("/images/milkyWay.jpg"));
+			imgPic.setImage(new Image("/images/room2.jpg"));
 			showInfo("C");
 		}
 		if (event.getTarget().equals(btnD)) {
-			imgPic.setImage(new Image("/images/moon.jpg"));
+			imgPic.setImage(new Image("/images/room3.jpg"));
 			showInfo("D");
 		}
 		if (event.getTarget().equals(btnE)) {
-			imgPic.setImage(new Image("/images/starryNight.jpg"));
+			imgPic.setImage(new Image("/images/room4.jpg"));
 			showInfo("E");
 		}
 		if (event.getTarget().equals(btnF)) {
-			imgPic.setImage(new Image("/images/DSCF3813.jpg"));
+			imgPic.setImage(new Image("/images/room5.jpg"));
 			showInfo("F");
 		}
 	}
