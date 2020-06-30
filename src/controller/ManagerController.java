@@ -516,18 +516,23 @@ public class ManagerController implements Initializable {
 			TableView tlvList = (TableView) scene.lookup("#tlvList");
 
 			TableColumn colUserId = new TableColumn("유저 아이디");
+			colUserId.setPrefWidth(100);
 			colUserId.setCellValueFactory(new PropertyValueFactory("userid"));
 
 			TableColumn colPassword = new TableColumn("비밀번호");
+			colPassword.setPrefWidth(100);
 			colPassword.setCellValueFactory(new PropertyValueFactory("password"));
 
 			TableColumn colName = new TableColumn("성명");
+			colName.setPrefWidth(100);
 			colName.setCellValueFactory(new PropertyValueFactory("name"));
 
 			TableColumn colPhone = new TableColumn("핸드폰 번호");
+			colPhone.setPrefWidth(100);
 			colPhone.setCellValueFactory(new PropertyValueFactory("phone"));
 
 			TableColumn colMail = new TableColumn("이메일");
+			colMail.setPrefWidth(200);
 			colMail.setCellValueFactory(new PropertyValueFactory("mail"));
 
 			tlvList.getColumns().addAll(colUserId, colPassword, colName, colPhone, colMail);
