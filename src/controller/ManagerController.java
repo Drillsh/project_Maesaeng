@@ -238,7 +238,8 @@ public class ManagerController implements Initializable {
 	private void getNoticeLoadTotalList() {
 		NoticeDAO noticeDAO = new NoticeDAO();
 		ArrayList<Notice> noticeList = noticeDAO.getNoticeLoadTotalList();
-		if (noticeList == null) {
+		if (noticeList != null) {
+			noticeObsList.clear();
 			return;
 		}
 		for (int i = 0; i < noticeList.size(); i++) {
@@ -281,10 +282,11 @@ public class ManagerController implements Initializable {
 				} else {
 					System.out.println("연결실패");
 				}
+				noticestage.close();
+				noticeObsList.clear();
+				getNoticeLoadTotalList();
 			});
-			noticestage.close();
-			noticeObsList.clear();
-			getNoticeLoadTotalList();
+			
 
 			noticestage = new Stage(StageStyle.UTILITY);
 			noticestage.initOwner(stage);
