@@ -94,10 +94,10 @@ public class ScheduleDAO {
 			pstmt = con.prepareStatement(query);
 			
 			pstmt.setString(1, schedule.getUserID());
-			pstmt.setString(2, schedule.getRoomName());
-			pstmt.setDate(3, Date.valueOf(schedule.getScheduleDate()));
-			pstmt.setInt(4, schedule.getStartTime());
-			pstmt.setInt(5, schedule.getEndTime());
+			pstmt.setDate(2, Date.valueOf(schedule.getScheduleDate()));
+			pstmt.setInt(3, schedule.getStartTime());
+			pstmt.setInt(4, schedule.getEndTime());
+			pstmt.setString(5, schedule.getRoomName());
 			pstmt.setInt(6, schedule.getPersonNum());
 
 			returnValue = pstmt.executeUpdate();

@@ -238,7 +238,8 @@ public class ManagerController implements Initializable {
 	private void getNoticeLoadTotalList() {
 		NoticeDAO noticeDAO = new NoticeDAO();
 		ArrayList<Notice> noticeList = noticeDAO.getNoticeLoadTotalList();
-		if (noticeList == null) {
+		if (noticeList != null) {
+			noticeObsList.clear();
 			return;
 		}
 		for (int i = 0; i < noticeList.size(); i++) {
