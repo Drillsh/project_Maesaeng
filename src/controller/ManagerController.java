@@ -81,18 +81,23 @@ public class ManagerController implements Initializable {
 	}
 
 	private void chartInitialize() {
-		XYChart.Series sales = new XYChart.Series();
-		sales.setName("Today");
-		ObservableList sales1 = FXCollections.observableArrayList(new XYChart.Data("6-25", 4),
-				new XYChart.Data("6-26", 1), new XYChart.Data("6-27", 5));
+		
+		SalesDAO salesDAO = new SalesDAO();
+		
+		ArrayList<Sales> salesArrayList = salesDAO.getSalesLoadList();
+		ObservableList salesObsList = FXCollections.observableArrayList();
+		
+		XYChart.Series salesChart = new XYChart.Series();
+		salesChart.setName("월별 매출");
+		
+		for (int i = 0; i < salesArrayList.size(); i++) {
+			Sales s = salesArrayList.get(i);
+			salesObsList.add(new XYChart.Data(s.getMonth()+" 월", s.getSales()));
+		}
+		
+		salesChart.setData(salesObsList);
 
-		sales.setData(sales1);
-		barChart.getData().add(sales);
-		// mainXYchart.getData().add(hp);
-
-		XYChart.Series sales2 = new XYChart.Series();
-		sales2.setName("Month");
-		sales2.setData(FXCollections.observableArrayList(new XYChart.Data("6월", 107)));
+		barChart.getData().add(salesChart);
 	}
 
 	// 공지사항 이벤트 핸들러

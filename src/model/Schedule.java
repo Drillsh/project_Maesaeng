@@ -15,7 +15,7 @@ public class Schedule {
 		
 	}
 
-	public Schedule(String userID, String roomName, LocalDate scheduleDate, int startTime, int endTime, int personNum) {
+	public Schedule(String userID, LocalDate scheduleDate, int startTime, int endTime, String roomName, int personNum) {
 		super();
 		this.userID = userID;
 		this.roomName = roomName;

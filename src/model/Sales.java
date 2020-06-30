@@ -1,38 +1,29 @@
 package model;
 
-import java.time.*;
-
 public class Sales {
 
-	private LocalDate sDate;
-	private int todaySales;
-	private int monthSales;
+	private int month;
+	private int sales;
 	
-	public Sales(LocalDate sDate, int todaySales, int monthSales) {
-		this.sDate = sDate;
-		this.todaySales = todaySales;
-		this.monthSales = monthSales;
+	public Sales(int month, int sales) {
+		this.month = month;
+		this.sales = sales;
 	}
-	
-	
-	public LocalDate getsDate() {
-		return sDate;
+
+	public int getMonth() {
+		return month;
 	}
-	public void setsDate(LocalDate sDate) {
-		this.sDate = sDate;
+
+	public void setMonth(int month) {
+		this.month = month;
 	}
-	public int getTodaySales() {
-		return todaySales;
+
+	public int getSales() {
+		return sales;
 	}
-	public void setTodaySales(int todaySales) {
-		this.todaySales = todaySales;
+
+	public void setSales(int sales) {
+		this.sales = sales;
 	}
-	public int getMonthSales() {
-		return monthSales;
-	}
-	public void setMonthSales(int monthSales) {
-		this.monthSales = monthSales;
-	}
-	
 	
 }

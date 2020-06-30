@@ -1,15 +1,9 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 
-import javax.xml.transform.Result;
-
-import model.Sales;
+import model.*;
 
 public class SalesDAO {
 	//DB연동
@@ -17,24 +11,28 @@ public class SalesDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<Sales> salesList = null;
+		ArrayList<Sales> salesList = new ArrayList<Sales>();
 
 		try {
 			con = DBUtil.getConnection();
 			if (con != null) {
+				System.out.println(" SalesDAO.getSalesLoadList  : DB연결 성공");
 			} else {
-				System.out.println(" Managercontroller.getSalesLoadList  : DB연결 실페");
+				System.out.println(" SalesDAO.getSalesLoadList  : DB연결 실패");
 			}
 
-			String query = "select * from salestbl";
+			String query = "select Month(revDate), sum(EndTime - startTime) * sum(PersonNum) * sum(price) AS '매출'  \n" + 
+					"from scheduletbl AS sch\n" + 
+					"join roomtbl As room\n" + 
+					"on sch.RoomName = room.roomName\n" + 
+					"group by Month(sch.revDate);";
 
 			pstmt = con.prepareStatement(query);
 
 			rs = pstmt.executeQuery();
-			salesList = new ArrayList<Sales>();
 
 			while (rs.next()) {
-				Sales sales = new Sales(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3));
+				Sales sales = new Sales(rs.getInt(1), rs.getInt(2));
 				salesList.add(sales);
 			}
 

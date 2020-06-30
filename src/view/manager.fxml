@@ -48,7 +48,7 @@
          </font></Label>
       <Label fx:id="lbLogout" layoutX="683.0" layoutY="128.0" text="로그아웃" underline="true" />
       <Label layoutX="74.0" layoutY="52.0" />
-      <BarChart fx:id="barChart" layoutX="146.0" layoutY="372.0" prefHeight="365.0" prefWidth="546.0">
+      <BarChart fx:id="barChart" layoutX="109.0" layoutY="362.0" prefHeight="365.0" prefWidth="546.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -56,7 +56,6 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </BarChart>
-      <Label layoutX="43.0" layoutY="363.0" text="월 매출액" />
       <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="679.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/exit_manager.png" />

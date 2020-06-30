@@ -37,14 +37,14 @@ public class ScheduleDAO {
 			
 			// query문을 실행하기 위한 준비.
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, String.valueOf(date) );
+			pstmt.setDate(1, Date.valueOf(date) );
 			pstmt.setString(2, rName );
 
 			// 쿼리문을 실행한다
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getDate(3).toLocalDate(), rs.getInt(4), rs.getInt(5),rs.getInt(6));
+				Schedule schedule = new Schedule(rs.getString(1), rs.getDate(2).toLocalDate(), rs.getInt(3), rs.getInt(4), rs.getString(5),rs.getInt(6));
 
 				arrayList.add(schedule);
 			}
