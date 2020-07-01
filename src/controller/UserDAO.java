@@ -221,9 +221,9 @@ public class UserDAO {
 		try {
 			con = DBUtil.getConnection();
 			if (con != null) {
-				System.out.println("userDAO.registerUser: DB 연동 성공");
+				
 			} else {
-				System.out.println("userDAO.registerUser: DB 연동 실패");
+				
 			}
 			
 			String query = "insert into usertbl values(?,?,?,?,?)";

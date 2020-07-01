@@ -78,6 +78,5 @@
             <Image url="@../../../../Documents/카카오톡%20받은%20파일/KakaoTalk_20200619_093534372.jpg" />
          </image>
       </ImageView>
-      <Button id="btnremove" layoutX="742.0" layoutY="145.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="80.0" text="사진삭제" />
    </children>
 </AnchorPane>
