@@ -101,9 +101,13 @@ public class ScheduleDAO {
 			pstmt.setInt(6, schedule.getPersonNum());
 
 			returnValue = pstmt.executeUpdate();
-			
 		
 		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("예약 정보");
+			alert.setHeaderText("예약 실패!!");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
 			
 		} finally {
 			try {

@@ -600,7 +600,7 @@ public class ManagerController implements Initializable {
 		String str = user.getUserid();
 		int returnValue = userDAO.UserDelete(str);
 		if (returnValue != 0) {
-			obslist.remove(selectedImage);
+			obslist.remove(tableViewSelectedIndex);
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
