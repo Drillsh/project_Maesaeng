@@ -182,7 +182,7 @@ public class ManagerController implements Initializable {
 				Notice notice = noticeObsList.get(tableViewSelectedIndex);
 
 				notice.setTitle(txtEditTitle.getText());
-				notice.setContents(txtEditTitle.getText());
+				notice.setContents(txaEditContents.getText());
 
 				int returnValue = 0;
 
