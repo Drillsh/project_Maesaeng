@@ -303,7 +303,7 @@ public class LoginController implements Initializable {
 	private void handleBtnRecoAction(TextField txfId, PasswordField pxtPw, TextField txfName, TextField txfPhone,
 			TextField txfEmail, Stage stage) {
 
-		user = new User(txfId.getText(), pxtPw.getText(), txfName.getText(), txfPhone.getText(), txfEmail.getText());
+		user = new User(txfId.getText(), pxtPw.getText(), txfName.getText(), String.valueOf(txfPhone.getText()), txfEmail.getText());
 
 		UserDAO userDAO = new UserDAO();
 
